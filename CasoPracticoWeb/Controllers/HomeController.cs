@@ -1,4 +1,4 @@
-using CasoPracticoWeb.Models;
+    using CasoPracticoWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
@@ -39,11 +39,11 @@ namespace CasoPracticoWeb.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(string name, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
             var user = new Login
             {
-                Name = name,
+                Email = email,
                 Password = password
             };
             _httpClient.BaseAddress = baseAdrress;
@@ -56,7 +56,7 @@ namespace CasoPracticoWeb.Controllers
             {
                 List<Claim> claims = new List<Claim>()
                 {
-                    new Claim(ClaimTypes.Name, name)
+                    new Claim(ClaimTypes.Email, email)
                 };
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 AuthenticationProperties properties = new AuthenticationProperties() { AllowRefresh = true };
@@ -75,9 +75,9 @@ namespace CasoPracticoWeb.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult register(string name, string email, string password)
+        public IActionResult register(string nombre, string email, string password)
         {
-            var user = new User { Email = email, Name = name, Password = password };
+            var user = new User { Email = email, Nombre = nombre, Password = password };
             _httpClient.BaseAddress = baseAdrress;
 
             var json = JsonSerializer.Serialize(user);

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CasoPracticoAPI.Context;
-using CasoPracticoAPI.Models;
 using CasoPracticoAPI.DTO;
+using Microsoft.Data.SqlClient;
+using Dapper;
+using InfoBretesAPI.Models;
 
 namespace CasoPracticoAPI.Controllers
 {
@@ -15,32 +15,66 @@ namespace CasoPracticoAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public UsersController(AppDbContext context)
-        {
-            _context = context;
-        }
 
         // POST: api/users/login
         [HttpPost("login")]
-        public ActionResult<User> Login(LoginDto user)
+        public async Task<IActionResult> Login(LoginDto ent)
         {
-            var response = _context.Users.Where(f => f.Name == user.Name)
-                                         .Where(f => f.Password == user.Password)
-                                         .FirstOrDefault();
+            Respuesta resp = new Respuesta();
 
-            return response == null ? NotFound() : Ok(response);
+            using var context = new SqlConnection("Server=JAIBLE; Database=InfoBretes; Trusted_Connection=True; TrustServerCertificate=True;");
+            var result = await context.QueryAsync<User>("ObtenerUsuario",
+                         new { ent.Email },
+                         commandType: System.Data.CommandType.StoredProcedure);
+
+            if (result.Any())
+            {
+                resp.Codigo = 1;
+                resp.Mensaje = "OK";
+                resp.Contenido = result;
+
+                return Ok(resp);
+            }
+            else
+            {
+                resp.Codigo = 0;
+                resp.Mensaje = "El usuario no esta registrado o las credenciales son incorrectas.";
+                resp.Contenido = false;
+
+                return Ok(resp);
+            }
         }
 
         // POST: api/users/register
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(User user)
+        public IActionResult Register(User ent)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            Respuesta resp = new Respuesta();
 
-            return Ok();
+            ent.FechaRegistro = DateTime.Now;
+            ent.IdTipo = 1;
+
+            using var context = new SqlConnection("Server=JAIBLE; Database=InfoBretes; Trusted_Connection=True; TrustServerCertificate=True;");
+            var result = context.Execute("RegistrarUsuario",
+                         new { ent.Nombre, ent.Email, ent.Password, ent.FechaRegistro, ent.IdTipo },
+                         commandType: System.Data.CommandType.StoredProcedure);
+
+            if (result > 0)
+            {
+                resp.Codigo = 1;
+                resp.Mensaje = "OK";
+                resp.Contenido = true;
+
+                return Ok(resp);
+            }
+            else
+            {
+                resp.Codigo = 0;
+                resp.Mensaje = "La informacion del usuario ya esta registrada.";
+                resp.Contenido = false;
+
+                return Ok(resp);
+            }
         }
     }
 }
