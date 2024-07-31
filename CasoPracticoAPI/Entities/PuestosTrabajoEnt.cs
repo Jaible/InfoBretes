@@ -2,7 +2,7 @@
 {
     public class PuestosTrabajoEnt
     {
-        public long idPuesto { get; }
+        public long idPuesto { get; set; }
         public int idEmpresa { get; set; }
         public string? titulo { get; set; }
         public string? descripcion { get; set; }

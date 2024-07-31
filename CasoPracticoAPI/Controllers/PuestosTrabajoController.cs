@@ -184,7 +184,52 @@ namespace InfoBretesAPI.Controllers
                 return StatusCode(500, new { message = "Ocurrió un error inesperado al eliminar el PuestosTrabajo.", error = ex.Message });
             }
         }
+        [AllowAnonymous]
+        [Route("ActualizarPuestosTrabajo")]
+        [HttpPut]
+        public IActionResult ActualizarPuestosTrabajo(PuestosTrabajoEnt PuestosTrabajo)
+        {
+            PuestosTrabajoRespuesta PuestosTrabajoRespuesta = new PuestosTrabajoRespuesta();
+            try
+            {
+                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    var result = db.Execute("ActualizarOferta",
+                        new
+                        {
+                            PuestosTrabajo.idPuesto,
+                            PuestosTrabajo.idEmpresa,
+                            PuestosTrabajo.titulo,
+                            PuestosTrabajo.descripcion,
+                            PuestosTrabajo.requisitos
+                        },
+                        commandType: CommandType.StoredProcedure);
 
+                    if (result <= 0)
+                    {
+                        PuestosTrabajoRespuesta.Codigo = "-1";
+                        PuestosTrabajoRespuesta.Mensaje = "No se ha podido actualizar en la base de datos, intenta de nuevo";
+                        return BadRequest(PuestosTrabajoRespuesta);
+                    }
+                    else
+                    {
+                        PuestosTrabajoRespuesta.Codigo = "1";
+                        PuestosTrabajoRespuesta.Mensaje = "PuestosTrabajo actualizado con éxito.";
+                        return Ok(PuestosTrabajoRespuesta);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+
+                return StatusCode(500, new { message = "Error al actualizar el PuestosTrabajo en la base de datos.", error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new { message = "Ocurrió un error inesperado al actualizar el PuestosTrabajo.", error = ex.Message });
+            }
+        }
 
 
 
