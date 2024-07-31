@@ -1,17 +1,26 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using CasoPracticoWeb.Models;
+using CasoPracticoWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/login";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                 });
-
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
+builder.Services.AddSingleton<IPostulacionesModel, PostulacionesModel>();
+builder.Services.AddSingleton<IPuestosTrabajoModel, PuestosTrabajoModel>();
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
