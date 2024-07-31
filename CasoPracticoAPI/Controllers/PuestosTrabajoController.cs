@@ -101,7 +101,7 @@ namespace InfoBretesAPI.Controllers
         [AllowAnonymous]
         [Route("ConsultarUnPuestoTrabajo")]
         [HttpGet]
-        public IActionResult ConsultarUnPuestoTrabajo(long idPuesto)
+        public IActionResult ConsultarUnPuestoTrabajo(int idEmpresa)
         {
             PuestosTrabajoRespuesta PuestosTrabajoRespuesta = new PuestosTrabajoRespuesta();
             try
@@ -109,8 +109,8 @@ namespace InfoBretesAPI.Controllers
                 using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     var result = db.Query<PuestosTrabajoEnt>("ObtenerOfertaPorId",
-                        new { idPuesto },
-                        commandType: CommandType.StoredProcedure).FirstOrDefault();
+                        new { idEmpresa },
+                        commandType: CommandType.StoredProcedure).ToList();
 
                     if (result == null)
                     {
@@ -119,7 +119,7 @@ namespace InfoBretesAPI.Controllers
                     }
                     else
                     {
-                        PuestosTrabajoRespuesta.Dato = result;
+                        PuestosTrabajoRespuesta.Datos = result;
                         PuestosTrabajoRespuesta.Codigo = "1";
                         PuestosTrabajoRespuesta.Mensaje = "PuestosTrabajo consultado con éxito.";
                     }

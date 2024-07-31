@@ -37,7 +37,7 @@ namespace InfoBretesAPI.Controllers
                     if (result == null)
                     {
                         PostulacionesRespuesta.Codigo = "-1";
-                        PostulacionesRespuesta.Mensaje = "No hay Postulacioneses registrados.";
+                        PostulacionesRespuesta.Mensaje = "No hay Postulaciones registrados.";
                     }
                     else
                     {
