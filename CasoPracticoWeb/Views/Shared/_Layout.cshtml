@@ -51,6 +51,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="PuestosTrabajo" asp-action="ActualizarPuestosTrabajo">Actualizar Ofertas</a>
                         </li>
+                        <li class="nav-item">
+                            <input type="text" class="form-control" id="IdInput" placeholder="Ingrese el ID de la empresa">
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-success btn-sm" id="consultarButton">
+                                <h4>Buscar</h4>
+                            </a>
+                        </li>
+                        
 
 
                     </ul>
@@ -73,5 +82,15 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.getElementById('consultarButton').addEventListener('click', function (event) {
+            event.preventDefault(); 
+            var IdInput = document.getElementById('IdInput').value;
+            var url = '@Url.Action("ConsultarUnPuestoTrabajo", "PuestosTrabajo")' + '?idPuesto=' + encodeURIComponent(IdInput);
+            window.location.href = url;
+        });
+    </script>
+
 </body>
 </html>

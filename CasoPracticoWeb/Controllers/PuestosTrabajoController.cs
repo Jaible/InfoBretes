@@ -7,6 +7,8 @@ namespace CasoPracticoWeb.Controllers
 {
     public class PuestosTrabajoController(IPuestosTrabajoModel _PuestosTrabajoModel) : Controller
     {
+
+
         //Abre la vista:
         [HttpGet]
         public IActionResult RegistrarPuestosTrabajo()
@@ -42,9 +44,23 @@ namespace CasoPracticoWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult ActualizarPuestosTrabajo(long idPuesto)
+        public IActionResult ConsultarUnPuestoTrabajo(long idPuesto)
         {
             var respuestaModelo = _PuestosTrabajoModel.ConsultarUnPuestoTrabajo(idPuesto);
+
+            if (respuestaModelo?.Codigo == "1")
+                return View(respuestaModelo?.Datos);
+            else
+            {
+                ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
+                return View(new List<PuestosTrabajoEnt>());
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ActualizarPuestosTrabajo(long idPuesto)
+        {
+            var respuestaModelo = _PuestosTrabajoModel.ActualizarUnPuestosTrabajo(idPuesto);
             return View(respuestaModelo?.Dato);
         }
 
@@ -73,9 +89,11 @@ namespace CasoPracticoWeb.Controllers
             else
             {
                 ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-                return View();
+                return RedirectToAction("ConsultarPuestosTrabajo", "PuestosTrabajo");
             }
         }
+
+
 
     }
 }

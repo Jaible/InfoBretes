@@ -30,12 +30,12 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@Html.DisplayFor(modelItem => item.titulo)</h5>
                                         <p class="card-text">Datos Personales</p>
-                                        <p class="card-text"><small class="text-body-secondary">@Html.DisplayFor(modelItem => item.idEmpresa)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">@Html.DisplayFor(modelItem => item.titulo)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">@Html.DisplayFor(modelItem => item.descripcion)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">@Html.DisplayFor(modelItem => item.requisitos)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">@Html.DisplayFor(modelItem => item.fechaPublicacion)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">@Html.DisplayFor(modelItem => item.fechaCierre)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">ID empresa: @Html.DisplayFor(modelItem => item.idEmpresa)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Puesto de trabajo: @Html.DisplayFor(modelItem => item.titulo)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Descripcion: @Html.DisplayFor(modelItem => item.descripcion)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Requisitos: @Html.DisplayFor(modelItem => item.requisitos)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Fecha de publicacion: @Html.DisplayFor(modelItem => item.fechaPublicacion)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Fecha de cierre: @Html.DisplayFor(modelItem => item.fechaCierre)</small></p>
                                     </div>
                                 </div>
                             </div>
@@ -54,37 +54,5 @@
 </div>
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Confirmación</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @using (Html.BeginForm("EliminarPuestosTrabajo", "PuestosTrabajo", FormMethod.Post))
-            {
-                <div class="modal-body">
-                    <input type="hidden" id="IdPuestosTrabajo" name="IdPuestosTrabajo" value="">
-                    <p id="Question" style="font-weight: bold;"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger">Procesar</button>
-                </div>
-            }
-        </div>
-    </div>
-</div>
 
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
-        $(".passingID").click(function () {
-            $("#IdPuestosTrabajo").val($(this).data('id'));
-            $("#Question").text("¿Desea eliminar el PuestosTrabajo: " + $(this).data('name') + "?");
-        });
-    </script>
 }

@@ -3,7 +3,7 @@
     public class PostulacionesEnt
     {
         public long idPostulacion { get; }
-        public int estadoPostulacion { get; set; }
+        public string? estadoPostulacion { get; set; }
         public string? linkCurriculum { get; set; }
         public string? telefono { get; set; }
         public string? fotoPerfil { get; set; }

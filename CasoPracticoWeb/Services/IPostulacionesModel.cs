@@ -6,6 +6,6 @@ namespace CasoPracticoWeb.Services
 {
     public interface IPostulacionesModel
     {
-        PostulacionesRespuesta? ConsultarUnaPostulacion(long IdPuesto);
+        PostulacionesRespuesta? ConsultarUnaPostulacion(int idPuesto);
     }
 }
