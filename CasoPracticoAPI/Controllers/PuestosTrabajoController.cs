@@ -6,15 +6,15 @@ using System.Data;
 using System.Data.SqlClient;
 using static CasoPracticoAPI.Entities.PuestosTrabajoEnt;
 
-namespace InfoBretesAPI.Controllers
+namespace CasoPracticoAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PuestoTrabajoController : ControllerBase
+    public class PuestosTrabajoController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
-        public PuestoTrabajoController(IConfiguration configuration)
+        public PuestosTrabajoController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -60,7 +60,7 @@ namespace InfoBretesAPI.Controllers
             }
         }
         [AllowAnonymous]
-        [Route("ConsultarPuestosTrabajos")]
+        [Route("ConsultarPuestosTrabajo")]
         [HttpGet]
         public IActionResult ConsultarPuestosTrabajo()
         {
