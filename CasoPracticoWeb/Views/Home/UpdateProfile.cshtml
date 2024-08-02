@@ -1,0 +1,49 @@
+﻿@model InfoBretesWeb.Entities.UserEnt
+
+@{
+    ViewData["Title"] = "UpdateProfile";
+    Layout = "~/Views/Shared/_LayoutProfile.cshtml";
+}
+
+<div class="form-box">
+    <div class="title">Update Profile</div>
+    <form asp-action="UpdateProfile">
+        <div class="user-details">
+            <div class="input-box" hidden>
+                <span class="details">IdUsuario</span>
+                <input asp-for="IdUsuario" required />
+            </div>
+            <div class="input-box">
+                <span class="details">Name</span>
+                <input asp-for="Nombre" placeholder="Enter your name" required />
+            </div>
+            <div class="input-box">
+                <span class="details">Email</span>
+                <input asp-for="Email" placeholder="Enter your email" required />
+            </div>
+            <div class="input-box" hidden>
+                <span class="details">Password</span>
+                <input asp-for="Password" required />
+            </div>
+            <div class="input-box" hidden>
+                <span class="details">FechaRegistro</span>
+                <input asp-for="FechaRegistro" required />
+            </div>
+            <div class="input-box">
+                <span class="details">Direccion</span>
+                <input asp-for="Direccion" placeholder="Enter your address" required />
+            </div>
+            <div class="input-box" hidden>
+                <span class="details">IdTipo</span>
+                <input asp-for="IdTipo" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Update information" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

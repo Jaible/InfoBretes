@@ -1,26 +1,19 @@
-    using CasoPracticoWeb.Models;
+using CasoPracticoWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Text.Json;
 
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using InfoBretesWeb.Entities;
+using InfoBretesWeb.Models;
+using static InfoBretesWeb.Entities.UserEnt;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace CasoPracticoWeb.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IUserModel iUserModel) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private Uri baseAdrress = new Uri("https://localhost:7150/api/Users/");
-        private readonly HttpClient _httpClient;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-            _httpClient = new HttpClient();
-        }
-
         public IActionResult Index()
         {
             return View();
@@ -46,17 +39,13 @@ namespace CasoPracticoWeb.Controllers
                 Email = email,
                 Password = password
             };
-            _httpClient.BaseAddress = baseAdrress;
 
-            var json = JsonSerializer.Serialize(user);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            var response = _httpClient.PostAsync("login", content).Result;
+            UserRespuesta respuesta = iUserModel.IniciarSesion(user);
 
-            if (response.IsSuccessStatusCode)
-            {
+            if (respuesta.Codigo == "1") {
                 List<Claim> claims = new List<Claim>()
                 {
-                    new Claim(ClaimTypes.Email, email)
+                    new(ClaimTypes.Email, email)
                 };
                 ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 AuthenticationProperties properties = new AuthenticationProperties() { AllowRefresh = true };
@@ -67,31 +56,94 @@ namespace CasoPracticoWeb.Controllers
                     properties
                 );
                 return RedirectToAction("Index");
-            }
-            else
+            } else
             {
                 return RedirectToAction("Login");
             }
         }
 
         [HttpPost("register")]
-        public IActionResult register(string nombre, string email, string password)
+        public IActionResult Register(string nombre, string email, string password)
         {
-            var user = new User { Email = email, Nombre = nombre, Password = password };
-            _httpClient.BaseAddress = baseAdrress;
+            var user = new UserEnt { Email = email, Nombre = nombre, Password = password };
+            UserRespuesta respuesta = iUserModel.RegistrarUsuario(user);
 
-            var json = JsonSerializer.Serialize(user);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            var response = _httpClient.PostAsync("register", content).Result;
-
-            if (response.IsSuccessStatusCode)
+            if (respuesta.Codigo == "1")
             {
                 return RedirectToAction("Login");
+            } else
+            {
+                ViewBag.Mensaje = respuesta.Mensaje;
+                return View();
+            }
+            
+        }
+
+        [HttpGet("profile")]
+        public IActionResult Profile()
+        {
+            UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
+            var respuesta = iUserModel.Perfil(user);
+
+            if (respuesta.Codigo == "1")
+            {
+                ViewData.Model = respuesta.Dato;
+                return View();
             }
             else
             {
-                return RedirectToAction("Register");
+                return RedirectToAction("Index");
             }
+        }
+
+        [HttpGet("updateprofile")]
+        public IActionResult UpdateProfile()
+        {
+            UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
+            var respuesta = iUserModel.ModificaPerfil(user);
+
+            if (respuesta.Codigo == "1")
+            {
+                ViewData.Model = respuesta.Dato;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost("updateprofile")]
+        public async Task<IActionResult> UpdateProfile(UserEnt user)
+        {
+            var respuesta = iUserModel.ActualizarUsuario(user);
+
+            if (respuesta.Codigo == "1")
+            {
+                List<Claim> claims = new List<Claim>()
+                {
+                    new(ClaimTypes.Email, user.Email)
+                };
+                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                AuthenticationProperties properties = new AuthenticationProperties() { AllowRefresh = true };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(identity),
+                    properties
+                );
+                return RedirectToAction("Profile");
+            }
+            else
+            {
+                return RedirectToAction("UpdateProfile");
+            }
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()

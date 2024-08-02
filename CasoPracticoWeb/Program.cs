@@ -1,3 +1,4 @@
+using InfoBretesWeb.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     options.LoginPath = "/login";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
                 });
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
+builder.Services.AddScoped<IUserModel, UserModel>();
 
 var app = builder.Build();
 
