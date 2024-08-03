@@ -1,4 +1,4 @@
-﻿namespace CasoPracticoWeb.Models
+﻿namespace InfoBretesWeb.Entities
 {
     public class Login
     {
