@@ -7,16 +7,9 @@ namespace CasoPracticoWeb.Controllers
 {
     public class PostulacionesController(IPostulacionesModel _PostulacionesModel) : Controller
     {
-        //Abre la vista:
-        [HttpGet]
-        public IActionResult ConsultarUnaPostulacion()
-        {
-            return View();
-        }
-
 
         [HttpGet]
-        public IActionResult ConsultarUnaPostulacion(long IdPuesto)
+        public IActionResult ConsultarUnaPostulacion(int IdPuesto)
         {
             var respuestaModelo = _PostulacionesModel.ConsultarUnaPostulacion(IdPuesto);
 

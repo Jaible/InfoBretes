@@ -1,0 +1,103 @@
+﻿@model IEnumerable<CasoPracticoWeb.Entities.PuestosTrabajoEnt>
+
+@{
+    ViewData["Title"] = "Administrar PuestosTrabajo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+
+
+<div class="container-fluid">
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 ">
+            <h6 class="m-0 font-weight-bold text-white">Lista de Postulaciones</h6>
+        </div>
+        <div class="card-body">
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+
+                    @foreach (var item in Model)
+                    {
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="..." class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.titulo)</h5>
+                                        <p class="card-text">Datos Personales</p>
+                                        <p class="card-text"><small class="text-body-secondary">ID empresa: @Html.DisplayFor(modelItem => item.idEmpresa)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Puesto de trabajo: @Html.DisplayFor(modelItem => item.titulo)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Descripcion: @Html.DisplayFor(modelItem => item.descripcion)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Requisitos: @Html.DisplayFor(modelItem => item.requisitos)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Fecha de publicacion: @Html.DisplayFor(modelItem => item.fechaPublicacion)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Fecha de cierre: @Html.DisplayFor(modelItem => item.fechaCierre)</small></p>
+                                        <a class="btn btn-success btn-sm" href="@Url.Action("ActualizarPuestosTrabajo", "PuestosTrabajo", new { idPuesto = item.idPuesto })">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        <a class="btn btn-success btn-sm" href="@Url.Action("ConsultarUnaPostulacion", "Postulaciones", new { idPuesto = item.idPuesto })">
+                                            <i class="fas fa-address-card"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-danger btn-sm passingID" data-toggle="modal" data-target="#deleteModal"
+                                                data-id="@item.idPuesto" data-name="@item.titulo">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("EliminarPuestosTrabajo", "PuestosTrabajo", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <input type="hidden" id="idPuesto" name="idPuesto" value="">
+                    <p id="Question" style="font-weight: bold;"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Procesar</button>
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(".passingID").click(function () {
+            $("#idPuesto").val($(this).data('id'));
+            $("#Question").text("¿Desea eliminar el PuestosTrabajo: " + $(this).data('name') + "?");
+        });
+    </script>
+
+}
