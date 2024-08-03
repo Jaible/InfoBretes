@@ -20,6 +20,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
 builder.Services.AddSingleton<IPostulacionesModel, PostulacionesModel>();
 builder.Services.AddSingleton<IPuestosTrabajoModel, PuestosTrabajoModel>();
+builder.Services.AddSingleton<IEmpresasModel, EmpresasModel>();
 builder.Services.AddSingleton<IUserModel, UserModel>();
 var app = builder.Build();
 

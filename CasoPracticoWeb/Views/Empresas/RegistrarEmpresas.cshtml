@@ -1,0 +1,67 @@
+﻿@model CasoPracticoWeb.Entities.EmpresasEnt
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Modal para Registrar Empresas -->
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalRegistrarEmpresasLabel">Registrar Empresas</h5>
+        </div>
+        <div class="modal-body">
+            <form asp-action="RegistrarEmpresas">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                <div class="form-group">
+                    <label asp-for="nombreEmpresa" class="control-label"></label>
+                    <input asp-for="nombreEmpresa" class="form-control" />
+                    <span asp-validation-for="nombreEmpresa" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="idUsuario" class="control-label"></label>
+                    <input asp-for="idUsuario" class="form-control" />
+                    <span asp-validation-for="idUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="direccion" class="control-label"></label>
+                    <input asp-for="direccion" class="form-control" />
+                    <span asp-validation-for="direccion" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="descripcion" class="control-label"></label>
+                    <input asp-for="descripcion" class="form-control" />
+                    <span asp-validation-for="descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="sitioWeb" class="control-label"></label>
+                    <input asp-for="sitioWeb" class="form-control" value="0" />
+                    <span asp-validation-for="sitioWeb" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="telefono" class="control-label"></label>
+                    <input asp-for="telefono" class="form-control" value="0" />
+                    <span asp-validation-for="telefono" class="text-danger"></span>
+                </div>
+
+                <div class="form-group text-right">
+                    <a asp-action="ConsultarEmpresas" class="btn btn-secondary">Cancelar</a>
+                    <input type="submit" value="Registrar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
