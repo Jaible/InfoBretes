@@ -8,6 +8,7 @@ namespace CasoPracticoWeb.Services
         PuestosTrabajoRespuesta? ConsultarPuestosTrabajo();
 
         PuestosTrabajoRespuesta? ConsultarUnPuestoTrabajo(long idPuesto);
+        PuestosTrabajoRespuesta? ActualizarUnPuestosTrabajo(long idPuesto);
         PuestosTrabajoRespuesta? RegistrarPuestosTrabajo(PuestosTrabajoEnt entidad);
         PuestosTrabajoRespuesta? ActualizarPuestosTrabajo(PuestosTrabajoEnt entidad);
 

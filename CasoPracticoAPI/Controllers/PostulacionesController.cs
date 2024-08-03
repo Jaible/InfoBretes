@@ -23,7 +23,7 @@ namespace InfoBretesAPI.Controllers
         [AllowAnonymous]
         [Route("ConsultarUnaPostulacion")]
         [HttpGet]
-        public IActionResult ConsultarUnaPostulacion(long IdPuesto)
+        public IActionResult ConsultarUnaPostulacion(int idPuesto)
         {
             PostulacionesRespuesta PostulacionesRespuesta = new PostulacionesRespuesta();
             try
@@ -31,8 +31,8 @@ namespace InfoBretesAPI.Controllers
                 using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
                     var result = db.Query<PostulacionesEnt>("ObtenerSolicitudPorId",
-                        new { IdPuesto },
-                        commandType: CommandType.StoredProcedure).FirstOrDefault();
+                        new { idPuesto },
+                        commandType: CommandType.StoredProcedure).ToList();
 
                     if (result == null)
                     {
@@ -41,7 +41,7 @@ namespace InfoBretesAPI.Controllers
                     }
                     else
                     {
-                        PostulacionesRespuesta.Dato = result;
+                        PostulacionesRespuesta.Datos = result;
                         PostulacionesRespuesta.Codigo = "1";
                         PostulacionesRespuesta.Mensaje = "Postulaciones consultado con éxito.";
                     }

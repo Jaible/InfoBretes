@@ -6,15 +6,15 @@ using System.Data;
 using System.Data.SqlClient;
 using static CasoPracticoAPI.Entities.PuestosTrabajoEnt;
 
-namespace InfoBretesAPI.Controllers
+namespace CasoPracticoAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PuestoTrabajoController : ControllerBase
+    public class PuestosTrabajoController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
-        public PuestoTrabajoController(IConfiguration configuration)
+        public PuestosTrabajoController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -60,7 +60,7 @@ namespace InfoBretesAPI.Controllers
             }
         }
         [AllowAnonymous]
-        [Route("ConsultarPuestosTrabajos")]
+        [Route("ConsultarPuestosTrabajo")]
         [HttpGet]
         public IActionResult ConsultarPuestosTrabajo()
         {
@@ -184,6 +184,48 @@ namespace InfoBretesAPI.Controllers
                 return StatusCode(500, new { message = "Ocurrió un error inesperado al eliminar el PuestosTrabajo.", error = ex.Message });
             }
         }
+
+        [AllowAnonymous]
+        [Route("ActualizarUnPuestosTrabajo")]
+        [HttpGet]
+        public IActionResult ActualizarUnPuestosTrabajo(long idPuesto)
+        {
+            PuestosTrabajoRespuesta PuestosTrabajoRespuesta = new PuestosTrabajoRespuesta();
+            try
+            {
+                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    var result = db.Query<PuestosTrabajoEnt>("ActualizarOfertaPorId",
+                        new { idPuesto },
+                        commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                    if (result == null)
+                    {
+                        PuestosTrabajoRespuesta.Codigo = "-1";
+                        PuestosTrabajoRespuesta.Mensaje = "No hay puestos registrados.";
+                    }
+                    else
+                    {
+                        PuestosTrabajoRespuesta.Dato = result;
+                        PuestosTrabajoRespuesta.Codigo = "1";
+                        PuestosTrabajoRespuesta.Mensaje = "Puesto consultado con éxito.";
+                    }
+
+                    return Ok(PuestosTrabajoRespuesta);
+                }
+            }
+            catch (SqlException ex)
+            {
+
+                return StatusCode(500, new { message = "Error al consultar el proveedor en la base de datos.", error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new { message = "Ocurrió un error inesperado al consultar el proveedor.", error = ex.Message });
+            }
+        }
+
         [AllowAnonymous]
         [Route("ActualizarPuestosTrabajo")]
         [HttpPut]

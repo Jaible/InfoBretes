@@ -30,9 +30,9 @@ namespace CasoPracticoWeb.Models
             return null;
         }
 
-        public PuestosTrabajoRespuesta? ConsultarUnPuestoTrabajo(long idPuesto)
+        public PuestosTrabajoRespuesta? ConsultarUnPuestoTrabajo(long idEmpresa)
         {
-            string url = _configuration.GetSection("settings:UrlApi").Value + "api/PuestosTrabajo/ConsultarUnPuestoTrabajo?idPuesto=" + idPuesto;
+            string url = _configuration.GetSection("settings:UrlApi").Value + "api/PuestosTrabajo/ConsultarUnPuestoTrabajo?idEmpresa=" + idEmpresa;
             var resp = _http.GetAsync(url).Result;
 
             if (resp.IsSuccessStatusCode)
@@ -41,7 +41,16 @@ namespace CasoPracticoWeb.Models
             return null;
         }
 
+        public PuestosTrabajoRespuesta? ActualizarUnPuestosTrabajo(long idPuesto)
+        {
+            string url = _configuration.GetSection("settings:UrlApi").Value + "api/Inventario/ActualizarUnPuestosTrabajo?idPuesto=" + idPuesto;
+            var resp = _http.GetAsync(url).Result;
 
+            if (resp.IsSuccessStatusCode)
+                return resp.Content.ReadFromJsonAsync<PuestosTrabajoRespuesta>().Result;
+
+            return null;
+        }
         public PuestosTrabajoRespuesta? ActualizarPuestosTrabajo(PuestosTrabajoEnt entidad)
         {
             string url = _configuration.GetSection("settings:UrlApi").Value + "api/PuestosTrabajo/ActualizarPuestosTrabajo";
