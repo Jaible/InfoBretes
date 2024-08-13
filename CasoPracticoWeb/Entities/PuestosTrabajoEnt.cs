@@ -7,8 +7,12 @@
         public string? titulo { get; set; }
         public string? descripcion { get; set; }
         public string? requisitos { get; set; }
-        public string? fechaPublicacion { get; }
-        public string? fechaCierre { get; }
+        public string? ubicacion { get; set; }
+        public string? tipoEmpleo { get; set; }
+        public string? salario { get; set; }
+        public string? nombreEmpresa { get; set; }
+        public string? fechaPublicacion { get; set; }
+        public string? fechaCierre { get; set; }
 
         public class PuestosTrabajoRespuesta
         {

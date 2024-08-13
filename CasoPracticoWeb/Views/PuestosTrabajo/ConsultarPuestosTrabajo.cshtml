@@ -7,8 +7,39 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
 
-
 <div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="locationFilter">Filtrar por Ubicación:</label>
+            <select id="locationFilter" class="form-control">
+                <option value="">Todos</option>
+                @foreach (var loc in Model.Select(m => m.ubicacion).Distinct())
+                {
+                    <option value="@loc">@loc</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="companyFilter">Filtrar por Empresa:</label>
+            <select id="companyFilter" class="form-control">
+                <option value="">Todos</option>
+                @foreach (var company in Model.Select(m => m.nombreEmpresa).Distinct())
+                {
+                    <option value="@company">@company</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="jobTypeFilter">Filtrar por Tipo de Empleo:</label>
+            <select id="jobTypeFilter" class="form-control">
+                <option value="">Todos</option>
+                @foreach (var type in Model.Select(m => m.tipoEmpleo).Distinct())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+    </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 ">
@@ -16,12 +47,14 @@
         </div>
         <div class="card-body">
             <hr />
-            <div class="row">
+            <div class="row" id="jobList">
                 <div class="col-sm-12">
-
                     @foreach (var item in Model)
                     {
-                        <div class="card mb-3" style="max-width: 540px;">
+                        <div class="card mb-3 job-item" style="max-width: 540px;"
+                             data-location="@item.ubicacion"
+                             data-company="@item.nombreEmpresa"
+                             data-jobtype="@item.tipoEmpleo">
                             <div class="row g-0">
                                 <div class="col-md-4">
                                     <img src="..." class="img-fluid rounded-start" alt="...">
@@ -29,10 +62,12 @@
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <h5 class="card-title">@Html.DisplayFor(modelItem => item.titulo)</h5>
-                                        <p class="card-text">Datos Personales</p>
-                                        <p class="card-text"><small class="text-body-secondary">ID empresa: @Html.DisplayFor(modelItem => item.idEmpresa)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">Puesto de trabajo: @Html.DisplayFor(modelItem => item.titulo)</small></p>
+                                        <p class="card-text">Datos Puesto</p>
+                                        <p class="card-text"><small class="text-body-secondary">Nombre Empresa: @Html.DisplayFor(modelItem => item.nombreEmpresa)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Tipo de trabajo: @Html.DisplayFor(modelItem => item.tipoEmpleo)</small></p>
                                         <p class="card-text"><small class="text-body-secondary">Descripcion: @Html.DisplayFor(modelItem => item.descripcion)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Ubicacion: @Html.DisplayFor(modelItem => item.ubicacion)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Salario: @Html.DisplayFor(modelItem => item.salario)</small></p>
                                         <p class="card-text"><small class="text-body-secondary">Requisitos: @Html.DisplayFor(modelItem => item.requisitos)</small></p>
                                         <p class="card-text"><small class="text-body-secondary">Fecha de publicacion: @Html.DisplayFor(modelItem => item.fechaPublicacion)</small></p>
                                         <p class="card-text"><small class="text-body-secondary">Fecha de cierre: @Html.DisplayFor(modelItem => item.fechaCierre)</small></p>
@@ -40,13 +75,7 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
-
                     }
-
                 </div>
             </div>
         </div>
@@ -55,4 +84,38 @@
 
 
 
-}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var locationFilter = document.getElementById("locationFilter");
+        var companyFilter = document.getElementById("companyFilter");
+        var jobTypeFilter = document.getElementById("jobTypeFilter");
+
+        locationFilter.addEventListener("change", filterJobs);
+        companyFilter.addEventListener("change", filterJobs);
+        jobTypeFilter.addEventListener("change", filterJobs);
+
+        function filterJobs() {
+            var locationValue = locationFilter.value.toLowerCase();
+            var companyValue = companyFilter.value.toLowerCase();
+            var jobTypeValue = jobTypeFilter.value.toLowerCase();
+
+            var jobItems = document.querySelectorAll(".job-item");
+
+            jobItems.forEach(function (item) {
+                var itemLocation = item.getAttribute("data-location").toLowerCase();
+                var itemCompany = item.getAttribute("data-company").toLowerCase();
+                var itemJobType = item.getAttribute("data-jobtype").toLowerCase();
+
+                var isLocationMatch = locationValue === "" || itemLocation.includes(locationValue);
+                var isCompanyMatch = companyValue === "" || itemCompany.includes(companyValue);
+                var isJobTypeMatch = jobTypeValue === "" || itemJobType.includes(jobTypeValue);
+
+                if (isLocationMatch && isCompanyMatch && isJobTypeMatch) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+    });
+</script>
