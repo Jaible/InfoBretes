@@ -3,11 +3,15 @@ using CasoPracticoWeb.Entities;
 using CasoPracticoWeb.Models;
 using CasoPracticoWeb.Services;
 using InfoBretesWeb.Filters;
+using System.Security.Claims;
+using InfoBretesWeb.Entities;
+using InfoBretesWeb.Services;
+using InfoBretesWeb.DTO;
 
 namespace CasoPracticoWeb.Controllers;
 
 [ServiceFilter(typeof(CustomAuthorizationFilter))]
-public class PostulacionesController(IPostulacionesModel _PostulacionesModel) : Controller
+public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IUserModel iUserModel, IEmpleadosModel iEmpleadosModel) : Controller
 {
 
     [HttpGet]
@@ -24,6 +28,30 @@ public class PostulacionesController(IPostulacionesModel _PostulacionesModel) : 
         }
     }
 
-    
+    [HttpGet]
+    public IActionResult CrearUnaPostulacion(int id)
+    {
+        UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
+        var respuesta = iUserModel.Perfil(user);
+        var emp = iEmpleadosModel.ConsultarEmpleado((int)respuesta.Dato.IdUsuario);
+
+        if(emp?.Codigo == "1")
+        {
+            PostulacionesDTO post = new PostulacionesDTO { idPuesto = id, idEmpleado = emp.Dato.idEmpleado };
+            var resp = _PostulacionesModel.CrearUnaPostulacion(post);
+
+            if (respuesta?.Codigo == "1")
+            {
+                return RedirectToAction("ConsultarPuestosTrabajo", "PuestosTrabajo");
+            }
+            else
+            {
+                return RedirectToAction("", "");
+            }
+        } else
+        {
+            return RedirectToAction("CreaEmpleado", "Empleados");
+        }
+    }
 
 }

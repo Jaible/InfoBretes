@@ -14,5 +14,6 @@ internal static class RepositoryConfiguration
         serviceCollection.AddSingleton<IPuestosTrabajoModel, PuestosTrabajoModel>();
         serviceCollection.AddSingleton<IEmpresasModel, EmpresasModel>();
         serviceCollection.AddSingleton<IUserModel, UserModel>();
+        serviceCollection.AddSingleton<IEmpleadosModel, EmpleadosModel>();
     }
 }
