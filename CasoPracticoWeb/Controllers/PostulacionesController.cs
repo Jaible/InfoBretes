@@ -46,7 +46,7 @@ public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IU
             }
             else
             {
-                return RedirectToAction("", "");
+                return RedirectToAction("Index", "Home");
             }
         } else
         {

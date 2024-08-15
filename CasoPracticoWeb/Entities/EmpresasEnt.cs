@@ -9,6 +9,7 @@
         public string? descripcion { get; set; }
         public string? sitioWeb { get; set; }
         public string? telefono { get; set; }
+        public string? correo { get; set; }
 
         public class EmpresasRespuesta
         {

@@ -5,7 +5,7 @@ namespace InfoBretesAPI.Services
 {
     public class EmailService
     {
-        public async Task SendEmail(string toEmail, string username, string nombre)
+        public async Task SendEmail(string correo, string username, string nombre, string toEmail)
         {
             var apiKey = "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";
             var client = new SendGridClient(apiKey);
@@ -16,7 +16,7 @@ namespace InfoBretesAPI.Services
             var data = new
             {
                 user = username,
-                email = toEmail,
+                email = correo,
                 titulo = nombre,
             };
 

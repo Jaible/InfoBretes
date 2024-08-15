@@ -85,8 +85,11 @@ namespace InfoBretesAPI.Controllers
                 var puesto = context.Query<PuestosTrabajoEnt>("ObtenerPuestoPorId",
                              new { ent.idPuesto },
                              commandType: CommandType.StoredProcedure).FirstOrDefault();
+                var empresa = context.Query<EmpresasEnt>("ObtenerEmpresaPorId",
+                              new { puesto.idEmpresa },
+                              commandType: CommandType.StoredProcedure).FirstOrDefault();
 
-                await _emailService.SendEmail(user.Email, user.Nombre, puesto.titulo);
+                await _emailService.SendEmail(user.Email, user.Nombre, puesto.titulo, empresa.correo);
                 resp.Codigo = "1";
                 resp.Mensaje = "La postulacion ha sido un exito";
             } else
