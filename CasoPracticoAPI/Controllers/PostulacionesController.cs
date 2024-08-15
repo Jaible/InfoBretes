@@ -5,6 +5,10 @@ using CasoPracticoAPI.Entities;
 using System.Data;
 using System.Data.SqlClient;
 using static CasoPracticoAPI.Entities.PostulacionesEnt;
+using InfoBretesAPI.DTO;
+using InfoBretesAPI.Services;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using InfoBretesAPI.Entities;
 
 namespace InfoBretesAPI.Controllers
 {
@@ -13,10 +17,12 @@ namespace InfoBretesAPI.Controllers
     public class PostulacionesController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly EmailService _emailService;
 
-        public PostulacionesController(IConfiguration configuration)
+        public PostulacionesController(IConfiguration configuration, EmailService emailService)
         {
             _configuration = configuration;
+            _emailService = emailService;
         }
 
 
@@ -61,9 +67,35 @@ namespace InfoBretesAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost("CrearPostulacion")]
+        public async Task<IActionResult> CrearUnaPostulacion(PostulacionesDTO ent)
+        {
+            PostulacionesRespuesta resp = new PostulacionesRespuesta();
+            using var context = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
+            var result = context.Execute("RegistrarPostulacion", new { ent.idEmpleado, ent.idPuesto },
+                         commandType: CommandType.StoredProcedure);
 
+            if (result > 0)
+            {
+                var user = context.Query<EmpleadoUsuarioDTO>("ObtenerUsuarioPorEmpleadoId",
+                             new { ent.idEmpleado },
+                             commandType: CommandType.StoredProcedure).FirstOrDefault();
+                var puesto = context.Query<PuestosTrabajoEnt>("ObtenerPuestoPorId",
+                             new { ent.idPuesto },
+                             commandType: CommandType.StoredProcedure).FirstOrDefault();
 
+                await _emailService.SendEmail(user.Email, user.Nombre, puesto.titulo);
+                resp.Codigo = "1";
+                resp.Mensaje = "La postulacion ha sido un exito";
+            } else
+            {
+                resp.Codigo = "0";
+                resp.Mensaje = "Hubo un error en la postulacion";
+            }
+            return Ok(resp);
+        }
     }
 }
 
