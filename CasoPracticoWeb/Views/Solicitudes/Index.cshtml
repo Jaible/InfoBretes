@@ -1,0 +1,39 @@
+﻿@model IEnumerable<WebApp.Models.Solicitud>
+
+@{
+    ViewData["Title"] = "Solicitudes";
+}
+
+<div class="container mt-4">
+    <h1>Solicitudes</h1>
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Solicitar Empleo</a>
+    </p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.IdUsuario)</th>
+                <th>@Html.DisplayNameFor(model => model.IdPostulacion)</th>
+                <th>@Html.DisplayNameFor(model => model.FechaSolicitud)</th>
+                <th>@Html.DisplayNameFor(model => model.EstadoPostulacion)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.IdUsuario)</td>
+                    <td>@Html.DisplayFor(modelItem => item.IdPostulacion)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FechaSolicitud)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EstadoPostulacion)</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.IdSolicitud" class="btn btn-warning btn-sm">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.IdSolicitud" class="btn btn-info btn-sm">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdSolicitud" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

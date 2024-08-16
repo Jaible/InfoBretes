@@ -1,0 +1,127 @@
+﻿@model WebApp.Models.Solicitud
+
+@{
+    ViewData["Title"] = "Crear Solicitud";
+}
+
+<div class="container mt-4">
+    <h1>Crear Solicitud</h1>
+    <hr />
+    <div id="form-container">
+        <form asp-action="Create" enctype="multipart/form-data" class="form-horizontal" id="createForm">
+            <div class="form-group row">
+                <label asp-for="IdUsuario" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="IdUsuario" class="form-control" />
+                    <span asp-validation-for="IdUsuario" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="IdPostulacion" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="IdPostulacion" class="form-control" />
+                    <span asp-validation-for="IdPostulacion" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="FechaSolicitud" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="FechaSolicitud" class="form-control" />
+                    <span asp-validation-for="FechaSolicitud" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="EstadoPostulacion" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <select asp-for="EstadoPostulacion" class="form-control" asp-items="ViewBag.Estados"></select>
+                    <span asp-validation-for="EstadoPostulacion" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Curriculum</label>
+                <div class="col-sm-10">
+                    <input type="file" name="curriculumFile" class="form-control-file" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Otros Documentos</label>
+                <div class="col-sm-10">
+                    <input type="file" name="otrosDocumentosFiles" class="form-control-file" multiple />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10 offset-sm-2">
+                    <input type="submit" value="Crear" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+                </div>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            function uploadForm(formId, redirectUrl) {
+                $(formId).submit(function (event) {
+                    event.preventDefault();
+                    var formData = new FormData(this);
+                    var progressBar = $(this).find('.progress-bar');
+                    var form = $(this);
+
+                    $.ajax({
+                        xhr: function () {
+                            var xhr = new window.XMLHttpRequest();
+                            xhr.upload.addEventListener('progress', function (event) {
+                                if (event.lengthComputable) {
+                                    var percentComplete = Math.round((event.loaded / event.total) * 100);
+                                    progressBar.width(percentComplete + '%');
+                                    progressBar.attr('aria-valuenow', percentComplete);
+                                }
+                            }, false);
+                            return xhr;
+                        },
+                        type: 'POST',
+                        url: form.attr('action'),
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            if (response.success) {
+                                window.location.href = response.redirectUrl;
+                            } else {
+                                // Reemplaza solo el formulario dentro del contenedor
+                                $('#form-container').html(response.html);
+                                // Vuelve a enlazar el manejador de envío del formulario
+                                uploadForm(formId, redirectUrl);
+                                // Repoblar el dropdown después de actualizar el formulario
+                                repopulateDropdown();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error al enviar el formulario:', error);
+                            alert('Error al enviar el formulario: ' + error);
+                        }
+                    });
+                });
+            }
+
+            function repopulateDropdown() {
+                var estados = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Estados))');
+                var dropdown = $('#EstadoPostulacion');
+                dropdown.empty();
+                $.each(estados, function (index, item) {
+                    dropdown.append($('<option></option>').attr('value', item.Value).text(item.Text));
+                });
+            }
+
+            uploadForm('#createForm', '/Solicitudes/Index');
+        });
+    </script>
+}
