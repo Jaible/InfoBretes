@@ -1,7 +1,7 @@
 ﻿using InfoBretesWeb.Entities;
 using static InfoBretesWeb.Entities.UserEnt;
 
-namespace InfoBretesWeb.Models
+namespace InfoBretesWeb.Services
 {
     public interface IUserModel
     {

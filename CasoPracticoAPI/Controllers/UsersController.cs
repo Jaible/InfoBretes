@@ -12,6 +12,11 @@ namespace CasoPracticoAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+        public UsersController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         // POST: api/users/login
         [HttpPost("login")]
@@ -19,7 +24,7 @@ namespace CasoPracticoAPI.Controllers
         {
             UserRespuesta resp = new UserRespuesta();
 
-            using var context = new SqlConnection("Server=JAIBLE; Database=InfoBretes; Trusted_Connection=True; TrustServerCertificate=True;");
+            using var context = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
             var result = context.Query<UserEnt>("ObtenerUsuario",
                          new { ent.Email, ent.Password },
                          commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
@@ -49,7 +54,7 @@ namespace CasoPracticoAPI.Controllers
             ent.FechaRegistro = DateTime.Now;
             ent.IdTipo = 1;
 
-            using var context = new SqlConnection("Server=JAIBLE; Database=InfoBretes; Trusted_Connection=True; TrustServerCertificate=True;");
+            using var context = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
             var result = context.Execute("RegistrarUsuario",
                          new { ent.Nombre, ent.Email, ent.Password, ent.FechaRegistro, ent.IdTipo },
                          commandType: System.Data.CommandType.StoredProcedure);
@@ -78,7 +83,7 @@ namespace CasoPracticoAPI.Controllers
         {
             UserRespuesta resp = new UserRespuesta();
 
-            using var context = new SqlConnection("Server=JAIBLE; Database=InfoBretes; Trusted_Connection=True; TrustServerCertificate=True;");
+            using var context = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
             var result = context.Query<UserEnt>("ObtenerUsuarioPorEmail",
                          new { email },
                          commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
@@ -104,7 +109,7 @@ namespace CasoPracticoAPI.Controllers
         {
             UserRespuesta resp = new UserRespuesta();
 
-            using var context = new SqlConnection("Server=JAIBLE; Database=InfoBretes; Trusted_Connection=True; TrustServerCertificate=True;");
+            using var context = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
             var result = context.Query<UserEnt>("ObtenerUsuarioPorEmail",
                          new { email },
                          commandType: System.Data.CommandType.StoredProcedure).FirstOrDefault();
@@ -130,7 +135,7 @@ namespace CasoPracticoAPI.Controllers
         {
             UserRespuesta resp = new UserRespuesta();
 
-            using var context = new SqlConnection("Server=JAIBLE; Database=InfoBretes; Trusted_Connection=True; TrustServerCertificate=True;");
+            using var context = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
             var result = context.Execute("ActualizarUsuario",
                          new { ent.IdUsuario, ent.Nombre, ent.Email, ent.Password, ent.FechaRegistro, ent.Direccion, ent.IdTipo },
                          commandType: System.Data.CommandType.StoredProcedure);
@@ -155,7 +160,7 @@ namespace CasoPracticoAPI.Controllers
         {
             UserRespuesta resp = new UserRespuesta();
 
-            using var context = new SqlConnection("Server=JAIBLE; Database=InfoBretes; Trusted_Connection=True; TrustServerCertificate=True;");
+            using var context = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
             var result = context.Execute("EliminarUsuario",
                          new { IdUsuario },
                          commandType: System.Data.CommandType.StoredProcedure);

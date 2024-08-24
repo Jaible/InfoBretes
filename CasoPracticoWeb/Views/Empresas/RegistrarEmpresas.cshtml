@@ -51,6 +51,12 @@
                     <span asp-validation-for="telefono" class="text-danger"></span>
                 </div>
 
+                <div class="form-group">
+                    <label asp-for="correo" class="control-label"></label>
+                    <input asp-for="correo" class="form-control" value="0" />
+                    <span asp-validation-for="correo" class="text-danger"></span>
+                </div>
+
                 <div class="form-group text-right">
                     <a asp-action="ConsultarEmpresas" class="btn btn-secondary">Cancelar</a>
                     <input type="submit" value="Registrar" class="btn btn-primary" />
