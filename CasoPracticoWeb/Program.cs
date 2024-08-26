@@ -22,6 +22,8 @@ builder.Services.AddSingleton<IPostulacionesModel, PostulacionesModel>();
 builder.Services.AddSingleton<IPuestosTrabajoModel, PuestosTrabajoModel>();
 builder.Services.AddSingleton<IEmpresasModel, EmpresasModel>();
 builder.Services.AddSingleton<IUserModel, UserModel>();
+builder.Services.AddSingleton<IComentarioModel, ComentarioModel>();
+
 var app = builder.Build();
 
 
