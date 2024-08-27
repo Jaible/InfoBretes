@@ -1,108 +1,180 @@
-    using CasoPracticoWeb.Models;
+using CasoPracticoWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
-
+using System.Data;
+using System.Data.SqlClient;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using InfoBretesAPI.Models;
 
-namespace CasoPracticoWeb.Controllers
+
+namespace InfoBretesWeb.Controllers
 {
-    public class HomeController : Controller
+    public class PostulacionesController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private Uri baseAdrress = new Uri("https://localhost:7150/api/Users/");
-        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(ILogger<HomeController> logger)
+        public PostulacionesController(IConfiguration configuration)
         {
-            _logger = logger;
-            _httpClient = new HttpClient();
+            _configuration = configuration;
         }
 
-        public IActionResult Index()
+        // Consultar una Postulación
+        public IActionResult ConsultarUnaPostulacion(int idPuesto)
         {
-            return View();
-        }
-
-        [HttpGet("login")]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpGet("register")]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(string email, string password)
-        {
-            var user = new Login
+            PostulacionesRespuesta PostulacionesRespuesta = new PostulacionesRespuesta();
+            try
             {
-                Email = email,
-                Password = password
-            };
-            _httpClient.BaseAddress = baseAdrress;
-
-            var json = JsonSerializer.Serialize(user);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            var response = _httpClient.PostAsync("login", content).Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                List<Claim> claims = new List<Claim>()
+                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
-                    new Claim(ClaimTypes.Email, email)
-                };
-                ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                AuthenticationProperties properties = new AuthenticationProperties() { AllowRefresh = true };
+                    var result = db.Query<PostulacionEnt>("ObtenerSolicitudPorId",
+                        new { idPuesto },
+                        commandType: CommandType.StoredProcedure).ToList();
 
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(identity),
-                    properties
-                );
-                return RedirectToAction("Index");
+                    if (result == null || result.Count == 0)
+                    {
+                        ViewBag.Mensaje = "No hay postulaciones registradas.";
+                        return View("Error");
+                    }
+
+                    PostulacionesRespuesta.Datos = result;
+                    PostulacionesRespuesta.Codigo = "1";
+                    PostulacionesRespuesta.Mensaje = "Postulación consultada con éxito.";
+
+                    return View(PostulacionesRespuesta.Datos);
+                }
             }
-            else
+            catch (SqlException ex)
             {
-                return RedirectToAction("Login");
+                ViewBag.Mensaje = "Error al consultar las postulaciones en la base de datos: " + ex.Message;
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Ocurrió un error inesperado al consultar las postulaciones: " + ex.Message;
+                return View("Error");
             }
         }
 
-        [HttpPost("register")]
-        public IActionResult register(string nombre, string email, string password)
+        // Crear una nueva Postulación
+        [HttpPost]
+        public IActionResult CrearPostulacion(PostulacionEnt nuevaPostulacion)
         {
-            var user = new User { Email = email, Nombre = nombre, Password = password };
-            _httpClient.BaseAddress = baseAdrress;
-
-            var json = JsonSerializer.Serialize(user);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            var response = _httpClient.PostAsync("register", content).Result;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return RedirectToAction("Login");
+                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    var result = db.Execute("CrearPostulacion",
+                        new
+                        {
+                            nuevaPostulacion.idEmpleado,
+                            nuevaPostulacion.idPuesto,
+                            nuevaPostulacion.FechaPostulacion,
+                            nuevaPostulacion.estadoPostulacion
+                        },
+                        commandType: CommandType.StoredProcedure);
+
+                    if (result > 0)
+                    {
+                        TempData["Mensaje"] = "Postulación creada con éxito.";
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["Mensaje"] = "No se pudo crear la postulación.";
+                        return RedirectToAction("Crear");
+                    }
+                }
             }
-            else
+            catch (SqlException ex)
             {
-                return RedirectToAction("Register");
+                ViewBag.Mensaje = "Error al crear la postulación en la base de datos: " + ex.Message;
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Ocurrió un error inesperado al crear la postulación: " + ex.Message;
+                return View("Error");
             }
         }
 
-        public IActionResult Privacy()
+        // Actualizar una Postulación existente
+        [HttpPost]
+        public IActionResult ActualizarPostulacion(PostulacionEnt postulacionActualizada)
         {
-            return View();
+            try
+            {
+                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    var result = db.Execute("ActualizarPostulacion",
+                        new
+                        {
+                            postulacionActualizada.idPostulacion,
+                            postulacionActualizada.idEmpleado,
+                            postulacionActualizada.idPuesto,
+                            postulacionActualizada.FechaPostulacion,
+                            postulacionActualizada.estadoPostulacion
+                        },
+                        commandType: CommandType.StoredProcedure);
+
+                    if (result > 0)
+                    {
+                        TempData["Mensaje"] = "Postulación actualizada con éxito.";
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["Mensaje"] = "No se pudo actualizar la postulación.";
+                        return RedirectToAction("Editar", new { id = postulacionActualizada.idPostulacion });
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ViewBag.Mensaje = "Error al actualizar la postulación en la base de datos: " + ex.Message;
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Ocurrió un error inesperado al actualizar la postulación: " + ex.Message;
+                return View("Error");
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        // Eliminar una Postulación
+        [HttpPost]
+        public IActionResult EliminarPostulacion(int idPostulacion)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            try
+            {
+                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+                {
+                    var result = db.Execute("EliminarPostulacion",
+                        new { idPostulacion },
+                        commandType: CommandType.StoredProcedure);
+
+                    if (result > 0)
+                    {
+                        TempData["Mensaje"] = "Postulación eliminada con éxito.";
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        TempData["Mensaje"] = "No se pudo eliminar la postulación.";
+                        return RedirectToAction("Index");
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                ViewBag.Mensaje = "Error al eliminar la postulación en la base de datos: " + ex.Message;
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Mensaje = "Ocurrió un error inesperado al eliminar la postulación: " + ex.Message;
+                return View("Error");
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace InfoBretesAPI.Models
+﻿namespace CasoPracticoWeb.Entities
 {
     public class PostulacionEnt
     {
@@ -7,11 +7,12 @@
         public int idPuesto { get; set; }
         public DateTime FechaPostulacion { get; set; }
         public string? estadoPostulacion { get; set; }
-        public string? linkCurriculum { get;  }
-        public string? telefono { get;  }
-        public string? fotoPerfil { get;  }
-        public string? nombre { get;  }
-        public string? email { get; }
+        public string? linkCurriculum { get; set; }
+        public string? telefono { get; set; }
+        public string? fotoPerfil { get; set; }
+        public string? nombre { get; set; }
+        public string? email { get; set; }
+
 
 
     }

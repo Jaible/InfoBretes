@@ -1,0 +1,53 @@
+﻿@model IEnumerable<CasoPracticoWeb.Entities.PostulacionEnt>
+
+@{
+    ViewData["Title"] = "Consultar Postulaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+
+
+<div class="container-fluid">
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 ">
+            <h6 class="m-0 font-weight-bold text-white">Lista de Postulaciones</h6>
+        </div>
+        <div class="card-body">
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    @foreach (var item in Model)
+                    {
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="..." class="img-fluid rounded-start" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.nombre)</h5>
+                                        <p class="card-text">Datos Personales</p>
+                                        <p class="card-text"><small class="text-body-secondary">Email:@Html.DisplayFor(modelItem => item.email)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Telefono:@Html.DisplayFor(modelItem => item.telefono)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Curriculum:@Html.DisplayFor(modelItem => item.linkCurriculum)</small></p>
+                                        <p class="card-text">Datos del trabajo</p>
+                                        <p class="card-text"><small class="text-body-secondary">ID empleado:@Html.DisplayFor(modelItem => item.idEmpleado)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">ID puesto:@Html.DisplayFor(modelItem => item.idPuesto)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">fecha postulacion:@Html.DisplayFor(modelItem => item.FechaPostulacion)</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Estado postulacion:@Html.DisplayFor(modelItem => item.estadoPostulacion)</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

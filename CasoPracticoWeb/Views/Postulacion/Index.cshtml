@@ -1,0 +1,29 @@
+﻿@model IEnumerable<InfoBretesAPI.Models.PostulacionEnt >
+
+<h2>Lista de Postulaciones</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Empleado</th>
+            <th>Puesto</th>
+            <th>Fecha de Postulación</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.idPostulacion</td>
+                <td>@item.idEmpleado</td>
+                <td>@item.idPuesto</td>
+                <td>@item.FechaPostulacion</td>
+                <td>@item.estadoPostulacion</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create")" class="btn btn-primary">Nueva Postulación</a>
