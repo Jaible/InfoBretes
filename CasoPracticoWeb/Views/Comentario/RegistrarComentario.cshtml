@@ -13,7 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Baskervville+SC&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <p class="card-text h6">Ingrese una reseña sobre esta empresa</p>
@@ -28,7 +27,20 @@
             <button class="btn btn-primary" type="submit">Enviar</button>
         </div>
     </div>
-    <script src="~/js/ComentarioJS.js"></script>
+    <script>
+        const stars = document.querySelectorAll('.star');
+
+        stars.forEach(function (star, RegistrarComentario) {
+            star.addEventListener('click', function () {
+                for (let i = 0; i <= RegistrarComentario; i++) {
+                    stars[i].classList.add('checked');
+                }
+                for (let i = RegistrarComentario + 1; i < stars.length; i++) {
+                    stars[i].classList.remove('checked');
+                }
+            })
+        })
+    </script>
 </body>
 </html>
 

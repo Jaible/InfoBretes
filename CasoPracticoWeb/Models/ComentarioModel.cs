@@ -21,7 +21,7 @@ namespace CasoPracticoWeb.Models
 
         public ComentarioRespuesta? ConsultarComentario()
         {
-            string url = _configuration.GetSection("settings:UrlApi").Value + "api/Empresas/ConsultarEmpresas";
+            string url = _configuration.GetSection("settings:UrlApi").Value + "api/Empresas/ConsultarUnComentario";
             var resp = _http.GetAsync(url).Result;
 
             if (resp.IsSuccessStatusCode)
