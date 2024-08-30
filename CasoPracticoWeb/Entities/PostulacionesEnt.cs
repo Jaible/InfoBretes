@@ -1,13 +1,15 @@
-﻿namespace CasoPracticoAPI.Entities
+﻿namespace CasoPracticoWeb.Entities
 {
     public class PostulacionesEnt
     {
-        public int idPostulacion { get; }
-        public int idEmpleado { get; set; }
-        public int idPuesto { get; set; }
-        public DateTime fechaPostulacion { get; set; } = DateTime.Now;
-        public string? estadoPostulacion { get; set; } = "Pendiente";
-
+        public long idPostulacion { get; }
+        public string? estadoPostulacion { get; set; }
+        public string? linkCurriculum { get; set; }
+        public string? telefono { get; set; }
+        public string? fotoPerfil { get; set; }
+        public string? nombre { get; set; }
+        public string? email { get; set; }
+   
 
         public class PostulacionesRespuesta
         {
