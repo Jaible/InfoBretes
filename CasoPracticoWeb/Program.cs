@@ -2,12 +2,12 @@ using InfoBretesWeb.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using CasoPracticoWeb.Models;
 using CasoPracticoWeb.Services;
+using InfoBretesWeb.Architecture;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -23,6 +23,9 @@ builder.Services.AddSingleton<IPuestosTrabajoModel, PuestosTrabajoModel>();
 builder.Services.AddSingleton<IEmpresasModel, EmpresasModel>();
 builder.Services.AddSingleton<IUserModel, UserModel>();
 builder.Services.AddSingleton<IComentarioModel, ComentarioModel>();
+LocalConfiguration.Register(builder.Services);
+RepositoryConfiguration.Register(builder.Services);
+
 
 var app = builder.Build();
 

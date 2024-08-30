@@ -2,27 +2,56 @@
 using CasoPracticoWeb.Entities;
 using CasoPracticoWeb.Models;
 using CasoPracticoWeb.Services;
+using InfoBretesWeb.Filters;
+using System.Security.Claims;
+using InfoBretesWeb.Entities;
+using InfoBretesWeb.Services;
+using InfoBretesWeb.DTO;
 
-namespace CasoPracticoWeb.Controllers
+namespace CasoPracticoWeb.Controllers;
+
+[ServiceFilter(typeof(CustomAuthorizationFilter))]
+public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IUserModel iUserModel, IEmpleadosModel iEmpleadosModel) : Controller
 {
-    public class PostulacionesController(IPostulacionesModel _PostulacionesModel) : Controller
+
+    [HttpGet]
+    public IActionResult ConsultarUnaPostulacion(int IdPuesto)
     {
+        var respuestaModelo = _PostulacionesModel.ConsultarUnaPostulacion(IdPuesto);
 
-        [HttpGet]
-        public IActionResult ConsultarUnaPostulacion(int IdPuesto)
+        if (respuestaModelo?.Codigo == "1")
+            return View(respuestaModelo?.Datos);
+        else
         {
-            var respuestaModelo = _PostulacionesModel.ConsultarUnaPostulacion(IdPuesto);
+            ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
+            return View(new List<PostulacionesEnt>());
+        }
+    }
 
-            if (respuestaModelo?.Codigo == "1")
-                return View(respuestaModelo?.Datos);
+    [HttpGet]
+    public IActionResult CrearUnaPostulacion(int id)
+    {
+        UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
+        var respuesta = iUserModel.Perfil(user);
+        var emp = iEmpleadosModel.ConsultarEmpleado((int)respuesta.Dato.IdUsuario);
+
+        if(emp?.Codigo == "1")
+        {
+            PostulacionesDTO post = new PostulacionesDTO { idPuesto = id, idEmpleado = emp.Dato.idEmpleado };
+            var resp = _PostulacionesModel.CrearUnaPostulacion(post);
+
+            if (respuesta?.Codigo == "1")
+            {
+                return RedirectToAction("ConsultarPuestosTrabajo", "PuestosTrabajo");
+            }
             else
             {
-                ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-                return View(new List<PostulacionesEnt>());
+                return RedirectToAction("Index", "Home");
             }
+        } else
+        {
+            return RedirectToAction("CreaEmpleado", "Empleados");
         }
-
-        
-
     }
+
 }

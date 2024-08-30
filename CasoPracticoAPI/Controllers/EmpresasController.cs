@@ -38,7 +38,8 @@ namespace CasoPracticoAPI.Controllers
                         Empresas.direccion,
                         Empresas.descripcion,
                         Empresas.sitioWeb,
-                        Empresas.telefono
+                        Empresas.telefono,
+                        Empresas.correo
                     };
 
                     var result = db.Execute("RegistrarEmpresa", parametros, commandType: CommandType.StoredProcedure);
