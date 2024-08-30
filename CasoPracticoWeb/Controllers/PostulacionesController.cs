@@ -8,6 +8,7 @@ using InfoBretesWeb.Entities;
 using InfoBretesWeb.Services;
 using InfoBretesWeb.DTO;
 
+
 namespace CasoPracticoWeb.Controllers;
 
 [ServiceFilter(typeof(CustomAuthorizationFilter))]
@@ -30,15 +31,18 @@ public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IU
 
     [HttpGet]
     public IActionResult CrearUnaPostulacion(int id)
+
     {
         UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
         var respuesta = iUserModel.Perfil(user);
         var emp = iEmpleadosModel.ConsultarEmpleado((int)respuesta.Dato.IdUsuario);
 
+
         if(emp?.Codigo == "1")
         {
             PostulacionesDTO post = new PostulacionesDTO { idPuesto = id, idEmpleado = emp.Dato.idEmpleado };
             var resp = _PostulacionesModel.CrearUnaPostulacion(post);
+
 
             if (respuesta?.Codigo == "1")
             {
@@ -46,12 +50,16 @@ public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IU
             }
             else
             {
+
                 return RedirectToAction("Index", "Home");
+
             }
         } else
         {
             return RedirectToAction("CreaEmpleado", "Empleados");
         }
+
     }
 
 }
+
