@@ -5,6 +5,7 @@ using CasoPracticoAPI.Entities;
 using System.Data;
 using System.Data.SqlClient;
 using static CasoPracticoAPI.Entities.EmpresasEnt;
+using static CasoPracticoAPI.Entities.ComentarioEnt;
 
 namespace CasoPracticoAPI.Controllers
 {
@@ -18,7 +19,6 @@ namespace CasoPracticoAPI.Controllers
         {
             _configuration = configuration;
         }
-
 
         [AllowAnonymous]
         [Route("RegistrarEmpresas")]
@@ -99,10 +99,6 @@ namespace CasoPracticoAPI.Controllers
                 return StatusCode(500, new { message = "Ocurrió un error inesperado al consultar Empresas.", error = ex.Message });
             }
         }
-
-
-
-
     }
 }
 

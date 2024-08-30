@@ -35,17 +35,15 @@
                                         <p class="card-text"><small class="text-body-secondary">Descripcion: @Html.DisplayFor(modelItem => item.descripcion)</small></p>
                                         <p class="card-text"><small class="text-body-secondary">Sitio Web: @Html.DisplayFor(modelItem => item.sitioWeb)</small></p>
                                         <p class="card-text"><small class="text-body-secondary">Telefonos: @Html.DisplayFor(modelItem => item.telefono)</small></p>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Comentario" asp-action="RegistrarComentario">Registrar Comentario</a>
+                                        <a class="btn btn-success btn-sm" href="@Url.Action("ConsultarComentario", "Comentario", new { idEmpresa = item.idEmpresa })">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
-
-
-
                     }
-
                 </div>
             </div>
         </div>
