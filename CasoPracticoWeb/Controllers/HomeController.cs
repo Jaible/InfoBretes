@@ -1,180 +1,169 @@
-using CasoPracticoWeb.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System.Text.Json;
-using System.Data;
-using System.Data.SqlClient;
+
 using System.Security.Claims;
-using InfoBretesAPI.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using InfoBretesWeb.Entities;
+using static InfoBretesWeb.Entities.UserEnt;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using InfoBretesWeb.Filters;
+using Microsoft.AspNetCore.Authorization;
+using InfoBretesWeb.Services;
 
+namespace CasoPracticoWeb.Controllers;
 
-namespace InfoBretesWeb.Controllers
+public class HomeController(IUserModel iUserModel) : Controller
 {
-    public class PostulacionesController : Controller
+    [Authorize]
+    public IActionResult Index()
     {
-        private readonly IConfiguration _configuration;
+        return View();
+    }
 
-        public PostulacionesController(IConfiguration configuration)
+    [AllowAnonymous]
+    [HttpGet("login")]
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("register")]
+    public IActionResult Register()
+    {
+        return View();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(string email, string password)
+    {
+        var user = new Login
         {
-            _configuration = configuration;
-        }
+            Email = email,
+            Password = password
+        };
 
-        // Consultar una Postulación
-        public IActionResult ConsultarUnaPostulacion(int idPuesto)
+        UserRespuesta respuesta = iUserModel.IniciarSesion(user);
+
+        if (respuesta.Codigo == "1") {
+            List<Claim> claims = new List<Claim>()
+            {
+                new(ClaimTypes.Email, email)
+            };
+            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            AuthenticationProperties properties = new AuthenticationProperties() { AllowRefresh = true };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity),
+                properties
+            );
+            return RedirectToAction("Index");
+        } else
         {
-            PostulacionesRespuesta PostulacionesRespuesta = new PostulacionesRespuesta();
-            try
-            {
-                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                {
-                    var result = db.Query<PostulacionEnt>("ObtenerSolicitudPorId",
-                        new { idPuesto },
-                        commandType: CommandType.StoredProcedure).ToList();
-
-                    if (result == null || result.Count == 0)
-                    {
-                        ViewBag.Mensaje = "No hay postulaciones registradas.";
-                        return View("Error");
-                    }
-
-                    PostulacionesRespuesta.Datos = result;
-                    PostulacionesRespuesta.Codigo = "1";
-                    PostulacionesRespuesta.Mensaje = "Postulación consultada con éxito.";
-
-                    return View(PostulacionesRespuesta.Datos);
-                }
-            }
-            catch (SqlException ex)
-            {
-                ViewBag.Mensaje = "Error al consultar las postulaciones en la base de datos: " + ex.Message;
-                return View("Error");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Mensaje = "Ocurrió un error inesperado al consultar las postulaciones: " + ex.Message;
-                return View("Error");
-            }
+            return RedirectToAction("Login");
         }
+    }
 
-        // Crear una nueva Postulación
-        [HttpPost]
-        public IActionResult CrearPostulacion(PostulacionEnt nuevaPostulacion)
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public IActionResult Register(string nombre, string email, string password)
+    {
+        var user = new UserEnt { Email = email, Nombre = nombre, Password = password };
+        UserRespuesta respuesta = iUserModel.RegistrarUsuario(user);
+
+        if (respuesta.Codigo == "1")
         {
-            try
-            {
-                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                {
-                    var result = db.Execute("CrearPostulacion",
-                        new
-                        {
-                            nuevaPostulacion.idEmpleado,
-                            nuevaPostulacion.idPuesto,
-                            nuevaPostulacion.FechaPostulacion,
-                            nuevaPostulacion.estadoPostulacion
-                        },
-                        commandType: CommandType.StoredProcedure);
-
-                    if (result > 0)
-                    {
-                        TempData["Mensaje"] = "Postulación creada con éxito.";
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        TempData["Mensaje"] = "No se pudo crear la postulación.";
-                        return RedirectToAction("Crear");
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                ViewBag.Mensaje = "Error al crear la postulación en la base de datos: " + ex.Message;
-                return View("Error");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Mensaje = "Ocurrió un error inesperado al crear la postulación: " + ex.Message;
-                return View("Error");
-            }
-        }
-
-        // Actualizar una Postulación existente
-        [HttpPost]
-        public IActionResult ActualizarPostulacion(PostulacionEnt postulacionActualizada)
+            return RedirectToAction("Login");
+        } else
         {
-            try
-            {
-                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                {
-                    var result = db.Execute("ActualizarPostulacion",
-                        new
-                        {
-                            postulacionActualizada.idPostulacion,
-                            postulacionActualizada.idEmpleado,
-                            postulacionActualizada.idPuesto,
-                            postulacionActualizada.FechaPostulacion,
-                            postulacionActualizada.estadoPostulacion
-                        },
-                        commandType: CommandType.StoredProcedure);
-
-                    if (result > 0)
-                    {
-                        TempData["Mensaje"] = "Postulación actualizada con éxito.";
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        TempData["Mensaje"] = "No se pudo actualizar la postulación.";
-                        return RedirectToAction("Editar", new { id = postulacionActualizada.idPostulacion });
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                ViewBag.Mensaje = "Error al actualizar la postulación en la base de datos: " + ex.Message;
-                return View("Error");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Mensaje = "Ocurrió un error inesperado al actualizar la postulación: " + ex.Message;
-                return View("Error");
-            }
+            ViewBag.Mensaje = respuesta.Mensaje;
+            return View();
         }
+        
+    }
 
-        // Eliminar una Postulación
-        [HttpPost]
-        public IActionResult EliminarPostulacion(int idPostulacion)
+    [Authorize]
+    [HttpGet("profile")]
+    public IActionResult Profile()
+    {
+        UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
+        var respuesta = iUserModel.Perfil(user);
+
+        if (respuesta.Codigo == "1")
         {
-            try
-            {
-                using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-                {
-                    var result = db.Execute("EliminarPostulacion",
-                        new { idPostulacion },
-                        commandType: CommandType.StoredProcedure);
-
-                    if (result > 0)
-                    {
-                        TempData["Mensaje"] = "Postulación eliminada con éxito.";
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        TempData["Mensaje"] = "No se pudo eliminar la postulación.";
-                        return RedirectToAction("Index");
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                ViewBag.Mensaje = "Error al eliminar la postulación en la base de datos: " + ex.Message;
-                return View("Error");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Mensaje = "Ocurrió un error inesperado al eliminar la postulación: " + ex.Message;
-                return View("Error");
-            }
+            ViewData.Model = respuesta.Dato;
+            return View();
         }
+        else
+        {
+            return RedirectToAction("Index");
+        }
+    }
+
+    [Authorize]
+    [HttpGet("updateprofile")]
+    public IActionResult UpdateProfile()
+    {
+        UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
+        var respuesta = iUserModel.ModificaPerfil(user);
+
+        if (respuesta.Codigo == "1")
+        {
+            ViewData.Model = respuesta.Dato;
+            return View();
+        }
+        else
+        {
+            return RedirectToAction("Index");
+        }
+    }
+
+    [Authorize]
+    [HttpPost("updateprofile")]
+    public async Task<IActionResult> UpdateProfile(UserEnt user)
+    {
+        var respuesta = iUserModel.ActualizarUsuario(user);
+
+        if (respuesta.Codigo == "1")
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new(ClaimTypes.Email, user.Email)
+            };
+            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            AuthenticationProperties properties = new AuthenticationProperties() { AllowRefresh = true };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity),
+                properties
+            );
+            return RedirectToAction("Profile");
+        }
+        else
+        {
+            return RedirectToAction("UpdateProfile");
+        }
+    }
+
+    [Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync();
+        return RedirectToAction("Index");
+    }
+
+    [Authorize]
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    [Authorize]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

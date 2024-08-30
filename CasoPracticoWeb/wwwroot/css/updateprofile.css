@@ -1,0 +1,52 @@
+﻿.form-box {
+    display: flex;
+    flex-direction: column;
+    height: 82vh;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.form-box .title {
+    font-size: 25px;
+    font-weight: 500;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.form-box .title::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    width: 30px;
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+.form-box form .user-details {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0 12px 0;
+}
+
+form .user-details .input-box {
+    margin-bottom: 15px;
+    margin-right: 10px;
+    width: calc(100% / 2 - 20px);
+}
+
+.user-details .input-box .details {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.user-details .input-box input {
+    height: 45px;
+    width: 100%;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding-left: 15px;
+    font-size: 16px;
+}

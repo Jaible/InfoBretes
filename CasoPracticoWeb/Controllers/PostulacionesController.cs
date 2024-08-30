@@ -2,101 +2,64 @@
 using CasoPracticoWeb.Entities;
 using CasoPracticoWeb.Models;
 using CasoPracticoWeb.Services;
+using InfoBretesWeb.Filters;
+using System.Security.Claims;
+using InfoBretesWeb.Entities;
+using InfoBretesWeb.Services;
+using InfoBretesWeb.DTO;
 
 
+namespace CasoPracticoWeb.Controllers;
 
-
-namespace CasoPracticoWeb.Controllers
+[ServiceFilter(typeof(CustomAuthorizationFilter))]
+public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IUserModel iUserModel, IEmpleadosModel iEmpleadosModel) : Controller
 {
-    public class PostulacionesController (IPostulacionesModel _PostulacionesModel) : Controller
+
+    [HttpGet]
+    public IActionResult ConsultarUnaPostulacion(int IdPuesto)
     {
+        var respuestaModelo = _PostulacionesModel.ConsultarUnaPostulacion(IdPuesto);
 
-
-        //Abre la vista:
-        [HttpGet]
-        public IActionResult CrearPostulacion()
+        if (respuestaModelo?.Codigo == "1")
+            return View(respuestaModelo?.Datos);
+        else
         {
-            return View();
+            ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
+            return View(new List<PostulacionesEnt>());
         }
+    }
 
-        [HttpPost]
-        public IActionResult CrearPostulacion(PostulacionEnt entidad)
+    [HttpGet]
+    public IActionResult CrearUnaPostulacion(int id)
+
+    {
+        UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
+        var respuesta = iUserModel.Perfil(user);
+        var emp = iEmpleadosModel.ConsultarEmpleado((int)respuesta.Dato.IdUsuario);
+
+
+        if(emp?.Codigo == "1")
         {
-            var RespuestaApi = _PostulacionesModel.CrearPostulacion(entidad);
+            PostulacionesDTO post = new PostulacionesDTO { idPuesto = id, idEmpleado = emp.Dato.idEmpleado };
+            var resp = _PostulacionesModel.CrearUnaPostulacion(post);
 
-            if (RespuestaApi?.Codigo == "1")
-                return RedirectToAction("ConsultarPostulaciones", "Postulacion");
+
+            if (respuesta?.Codigo == "1")
+            {
+                return RedirectToAction("ConsultarPuestosTrabajo", "PuestosTrabajo");
+            }
             else
             {
-                return RedirectToAction("ConsultarPostulaciones", "Postulacion");
+
+                return RedirectToAction("Index", "Home");
+
             }
-        }
-
-        [HttpGet]
-        public IActionResult ConsultarPostulaciones()
+        } else
         {
-            var respuestaModelo = _PostulacionesModel.ConsultarPostulaciones();
-
-            if (respuestaModelo?.Codigo == "1")
-                return View(respuestaModelo?.Datos);
-            else
-            {
-                ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-                return View(new List<PostulacionEnt>());
-            }
+            return RedirectToAction("CreaEmpleado", "Empleados");
         }
-
-        [HttpGet]
-        public IActionResult ConsultarPostulacionPorId(long idPostulacion)
-        {
-            var respuestaModelo = _PostulacionesModel.ConsultarPostulacionPorId(idPostulacion);
-
-            if (respuestaModelo?.Codigo == "1")
-                return View(respuestaModelo?.Datos);
-            else
-            {
-                ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-                return View(new List<PostulacionEnt>());
-            }
-        }
-
-        [HttpGet]
-        public IActionResult ActualizarunaPostulacion(long idPostulacion)
-        {
-            var respuestaModelo = _PostulacionesModel.ActualizarunaPostulacion(idPostulacion);
-            return View(respuestaModelo?.Dato);
-        }
-
-
-        [HttpPost]
-        public IActionResult ActualizarPostulacion(PostulacionEnt entidad)
-        {
-            var respuestaModelo = _PostulacionesModel.ActualizarPostulacion(entidad);
-
-            if (respuestaModelo?.Codigo == "1")
-                return RedirectToAction("ConsultarPostulaciones", "Postulacion");
-            else
-            {
-                ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-                return View();
-            }
-        }
-
-        [HttpPost]
-        public IActionResult EliminarPostulacion(PostulacionEnt entidad)
-        {
-            var respuestaModelo = _PostulacionesModel.EliminarPostulacion(entidad.idPostulacion);
-
-            if (respuestaModelo?.Codigo == "1")
-                return RedirectToAction("ConsultarPostulaciones", "Postulacion");
-            else
-            {
-                ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-                return RedirectToAction("ConsultarPostulaciones", "Postulacion");
-            }
-        }
-
-
 
     }
+
 }
+

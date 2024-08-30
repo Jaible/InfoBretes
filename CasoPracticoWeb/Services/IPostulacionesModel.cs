@@ -1,18 +1,15 @@
 ﻿using CasoPracticoWeb.Entities;
-using static CasoPracticoWeb.Entities.PostulacionEnt;
+using InfoBretesWeb.DTO;
+using static CasoPracticoWeb.Entities.PostulacionesEnt;
+
 
 
 namespace CasoPracticoWeb.Services
 {
     public interface IPostulacionesModel
     {
-        PostulacionesRespuesta? ConsultarPostulacionPorId(int idPostulacion);
-        PostulacionesRespuesta? ConsultarPostulaciones();
-        PostulacionesRespuesta? CrearPostulacion(PostulacionEnt Entidad);
-        PostulacionesRespuesta? ActualizarunaPostulacion(long idPostulacion);
-        PostulacionesRespuesta? ActualizarPostulacion(PostulacionEnt Entidad);
-        PostulacionesRespuesta? EliminarPostulacion(int idPostulacion);
-
+        PostulacionesRespuesta? ConsultarUnaPostulacion(int idPuesto);
+        PostulacionesRespuesta? CrearUnaPostulacion(PostulacionesDTO ent);
 
     }
 }
