@@ -36,7 +36,10 @@ namespace CasoPracticoAPI.Controllers
                         PuestosTrabajo.idEmpresa,
                         PuestosTrabajo.titulo,
                         PuestosTrabajo.descripcion,
-                        PuestosTrabajo.requisitos
+                        PuestosTrabajo.requisitos,
+                        PuestosTrabajo.ubicacion,
+                        PuestosTrabajo.salario,
+                        PuestosTrabajo.tipoEmpleo
                     };
 
                     var result = db.Execute("RegistrarOferta", parametros, commandType: CommandType.StoredProcedure);

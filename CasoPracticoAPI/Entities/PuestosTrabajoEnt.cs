@@ -7,6 +7,10 @@
         public string? titulo { get; set; }
         public string? descripcion { get; set; }
         public string? requisitos { get; set; }
+        public string? ubicacion { get; set; }
+        public string? tipoEmpleo { get; set; }
+        public string? salario { get; set; }
+        public string? nombreEmpresa { get; }
         public string? fechaPublicacion { get; }
         public string? fechaCierre { get; }
 
