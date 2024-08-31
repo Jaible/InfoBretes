@@ -1,0 +1,24 @@
+﻿@model List<CasoPracticoWeb.Entities.PostulacionDTO>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="section__container job__container" id="job">
+    <h2 class="section__header"><span>Tus </span> Postulaciones</h2>
+    <div class="job__grid">
+        @foreach (var item in Model) {
+            <div class="job__card">
+                <div class="job__card__header">
+                    <div>
+                        <h5>@item.nombre</h5>
+                        <a href="@item.linkCurriculum">Curriculum</a>
+                    </div>
+                </div>
+                <div class="job__card__footer">
+                    <span>@item.telefono</span>
+                    <a class="btn" asp-controller="Postulaciones" asp-route-id="@item.idPostulacion" asp-action="EliminarPostulacion">Eliminar</a>
+                </div>
+            </div>
+        }
+    </div>
+</section>

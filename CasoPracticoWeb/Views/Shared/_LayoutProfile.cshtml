@@ -28,13 +28,14 @@
             </div>
         </div>
         <ul class="nav__links" id="nav-links">
-            <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-            <li><a asp-controller="PuestosTrabajo" asp-action="ConsultarPuestosTrabajo">Ofertas</a></li>
-            <li><a asp-controller="Empresas" asp-action="ConsultarEmpresas">Empresas</a></li>
             @if (!User.Identity!.IsAuthenticated) {
                 <li><a asp-controller="Home" asp-action="Login">Login</a></li>
                 <li><a asp-controller="Home" asp-action="Register">Register</a></li>
             } else {
+                <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a asp-controller="PuestosTrabajo" asp-action="ConsultarPuestosTrabajo">Ofertas</a></li>
+                <li><a asp-controller="Empresas" asp-action="ConsultarEmpresas">Empresas</a></li>
+                <li><a asp-controller="Postulaciones" asp-action="ConsultarPostulacionPorEmpleado">Mis Postulaciones</a></li>
                 <li>
                     <a asp-controller="Home" asp-action="Profile">
                         <i class="fa-solid fa-user"></i>

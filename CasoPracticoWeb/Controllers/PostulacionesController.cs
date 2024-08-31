@@ -54,4 +54,31 @@ public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IU
         }
     }
 
+    [HttpGet]
+    public IActionResult ConsultarPostulacionPorEmpleado() {
+        UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
+        var respuesta = iUserModel.Perfil(user);
+        var empleado = iEmpleadosModel.ConsultarEmpleado((int)respuesta?.Dato?.IdUsuario);
+        var respuestaModelo = _PostulacionesModel.ConsultarPostulacionPorEmpleado((int)empleado?.Dato?.idEmpleado);
+
+        if (respuestaModelo?.Codigo == "1")
+            return View(respuestaModelo?.Datos);
+        else {
+            ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
+            return View(new List<PostulacionesEnt>());
+        }
+    }
+
+
+    [HttpGet]
+    public IActionResult EliminarPostulacion(int id) {
+        var respuestaModelo = _PostulacionesModel.EliminarPostulacion(id);
+
+        if (respuestaModelo?.Codigo == "1")
+            return RedirectToAction("ConsultarPostulacionPorEmpleado", "Postulacion");
+        else {
+            ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
+            return RedirectToAction("ConsultarPostulacionPorEmpleado", "Postulacion");
+        }
+    }
 }
