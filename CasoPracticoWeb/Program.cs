@@ -18,11 +18,6 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession();
-builder.Services.AddSingleton<IPostulacionesModel, PostulacionesModel>();
-builder.Services.AddSingleton<IPuestosTrabajoModel, PuestosTrabajoModel>();
-builder.Services.AddSingleton<IEmpresasModel, EmpresasModel>();
-builder.Services.AddSingleton<IUserModel, UserModel>();
-builder.Services.AddSingleton<IComentarioModel, ComentarioModel>();
 LocalConfiguration.Register(builder.Services);
 RepositoryConfiguration.Register(builder.Services);
 

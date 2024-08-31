@@ -1,55 +1,37 @@
 ﻿@model IEnumerable<CasoPracticoWeb.Entities.EmpresasEnt>
 
 @{
-    ViewData["Title"] = "Consultar Empresaso";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
-
-
-<div class="container-fluid">
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 ">
-            <h6 class="m-0 font-weight-bold text-white">Lista de Postulaciones</h6>
-        </div>
-        <div class="card-body">
-            <hr />
-            <div class="row">
-                <div class="col-sm-12">
-
-                    @foreach (var item in Model)
-                    {
-                        <div class="card mb-3" style="max-width: 540px;">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <img src="..." class="img-fluid rounded-start" alt="...">
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.nombreEmpresa)</h5>
-                                        <p class="card-text">Datos Personales</p>
-                                        <p class="card-text"><small class="text-body-secondary">ID Usuario: @Html.DisplayFor(modelItem => item.idUsuario)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">Direccion: @Html.DisplayFor(modelItem => item.direccion)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">Descripcion: @Html.DisplayFor(modelItem => item.descripcion)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">Sitio Web: @Html.DisplayFor(modelItem => item.sitioWeb)</small></p>
-                                        <p class="card-text"><small class="text-body-secondary">Telefonos: @Html.DisplayFor(modelItem => item.telefono)</small></p>
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Comentario" asp-action="RegistrarComentario">Registrar Comentario</a>
-                                        <a class="btn btn-success btn-sm" href="@Url.Action("ConsultarComentario", "Comentario", new { idEmpresa = item.idEmpresa })">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
+<section class="section__container job__container" id="job">
+    <h2 class="section__header"><span>Empresas </span> Dísponibles</h2>
+    <p class="section__description">
+        Descubre las empresas a las que nuestro portal estan afiliados para asi
+        poder descubrir nuevas oportunidades.
+    </p>
+    <a asp-controller="Empresas" asp-action="RegistrarEmpresas" class="btn">Nueva Empresa</a>
+    <div class="job__grid">
+        @foreach (var item in Model) {
+            <div class="job__card">
+                <div class="job__card__header">
+                    <div>
+                        <h5>@item.nombreEmpresa</h5>
+                        <h6>@item.direccion</h6>
+                    </div>
+                </div>
+                <p>
+                    @item.descripcion
+                </p>
+                <div class="job__card__footer">
+                    <span>@item.telefono</span>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Comentario" asp-action="RegistrarComentario">Registrar Comentario</a>
+                    <a class="btn btn-success btn-sm" href="@Url.Action("ConsultarComentario", "Comentario", new { idEmpresa = item.idEmpresa })">
+                        <i class="fas fa-pencil-alt"></i>
+                    </a>
                 </div>
             </div>
-        </div>
+        }
     </div>
-</div>
-
-
-
-}
+</section>

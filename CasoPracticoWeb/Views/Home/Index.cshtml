@@ -1,14 +1,165 @@
 ﻿@using System.Security.Claims;
-@{
-    ViewData["Title"] = "Home Page";
-}
+<header class="section__container header__container" id="home">
+    <img src="~/assets/google.png" alt="header" />
+    <img src="~/assets/twitter.png" alt="header" />
+    <img src="~/assets/amazon.png" alt="header" />
+    <img src="~/assets/figma.png" alt="header" />
+    <img src="~/assets/linkedin.png" alt="header" />
+    <img src="~/assets/microsoft.png" alt="header" />
+    <h2>
+        <img src="~/assets/bag.png" alt="bag" />
+        Pagina No.1 En busqueda de trabajo
+    </h2>
+    <h1>Busca, Aplica Y Consigue<br />El <span>Trabajo De Tus Sueños</span></h1>
+    <p>
+        Tu futuro empieza aqui. Descubre incontables oportunidades, ve adelante
+        aplicando a trabajos que concuerden con tus habilidades y aspiraciones.
+    </p>
+    <div class="header__btns">
+        <a asp-controller="PuestosTrabajo" asp-action="ConsultarPuestosTrabajo" class="btn" style="color: white;">Explora Ofertas</a>
+    </div>
+</header>
 
-<div class="text-center">
+<section class="steps" id="about">
+    <div class="section__container steps__container">
+        <h2 class="section__header">
+            Consigue trabajo en 4 <span>faciles pasos</span>
+        </h2>
+        <p class="section__description">
+            Sigue nuestra simple y paso a paso guia para asi poder ir a tu trabajo
+            soñado y empezar una carrera profesional.
+        </p>
+        <div class="steps__grid">
+            <div class="steps__card">
+                <span><i class="ri-user-fill"></i></span>
+                <h4>Registrate</h4>
+                <p>
+                    Regístrate con solo unos pocos clics para desbloquear acceso exclusivo a un
+                    mundo de oportunidades laborales y conseguir el trabajo de tus sueños. Es rápido,
+                    fácil y completamente gratis.
+                </p>
+            </div>
+            <div class="steps__card">
+                <span><i class="ri-search-fill"></i></span>
+                <h4>Busca trabajo</h4>
+                <p>
+                    Sumérgete en nuestra base de datos de empleos diseñada para adaptarse a tus habilidades y
+                    preferencias. Con nuestros filtros de búsqueda avanzados, encontrar el trabajo
+                    perfecto nunca ha sido tan fácil.
+                </p>
+            </div>
+            <div class="steps__card">
+                <span><i class="ri-file-paper-fill"></i></span>
+                <h4>Sube tu curriculum</h4>
+                <p>
+                    Muestra tu experiencia subiendo tu CV o currículum. 
+                    Hazles saber a los empleadores por qué eres el candidato 
+                    perfecto para sus puestos vacantes.
+                </p>
+            </div>
+            <div class="steps__card">
+                <span><i class="ri-briefcase-fill"></i></span>
+                <h4>Consigue trabajo</h4>
+                <p>
+                    Da el paso definitivo hacia tu nueva carrera. Prepárate para emprender
+                    tu viaje profesional y conseguir el trabajo con el que has estado
+                    soñando.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
+<section class="section__container explore__container">
+    <h2 class="section__header">
+        <span>Incontables opciones </span> esperan a que las encuentres
+    </h2>
+    <p class="section__description">
+        Descubra un mundo de oportunidades apasionantes y posibilidades infinitas,
+        y encuentre la trayectoria profesional perfecta para dar forma a su futuro.
+    </p>
+    <div class="explore__grid">
+        <div class="explore__card">
+            <span><i class="ri-pencil-ruler-2-fill"></i></span>
+            <h4>Diseño</h4>
+            <p>200+ ofertas de trabajo</p>
+        </div>
+        <div class="explore__card">
+            <span><i class="ri-bar-chart-box-fill"></i></span>
+            <h4>Ventas</h4>
+            <p>350+ ofertas de trabajo</p>
+        </div>
+        <div class="explore__card">
+            <span><i class="ri-megaphone-fill"></i></span>
+            <h4>Publicidad</h4>
+            <p>500+ ofertas de trabajo</p>
+        </div>
+        <div class="explore__card">
+            <span><i class="ri-wallet-3-fill"></i></span>
+            <h4>Financia</h4>
+            <p>200+ ofertas de trabajo</p>
+        </div>
+        <div class="explore__card">
+            <span><i class="ri-car-fill"></i></span>
+            <h4>Automovilismo</h4>
+            <p>250+ ofertas de trabajo</p>
+        </div>
+        <div class="explore__card">
+            <span><i class="ri-truck-fill"></i></span>
+            <h4>Logistica</h4>
+            <p>1k+ ofertas de trabajo</p>
+        </div>
+        <div class="explore__card">
+            <span><i class="ri-computer-fill"></i></span>
+            <h4>Administracion</h4>
+            <p>100+ ofertas de trabajo</p>
+        </div>
+        <div class="explore__card">
+            <span><i class="ri-building-fill"></i></span>
+            <h4>Construccion</h4>
+            <p>500+ ofertas de trabajo</p>
+        </div>
+    </div>
+</section>
 
-    @if (User.Identity!.IsAuthenticated)
-    {
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    }
-</div>
+<section class="section__container offer__container" id="service">
+    <h2 class="section__header">Lo Que <span>Ofrecemos</span></h2>
+    <p class="section__description">
+        Explore los beneficios y servicios que ofrecemos para mejorar su búsqueda de empleo
+        y su éxito profesional
+    </p>
+    <div class="offer__grid">
+        <div class="offer__card">
+            <img src="assets/offer-1.jpg" alt="offer" />
+            <div class="offer__details">
+                <span>01</span>
+                <div>
+                    <h4>Recomendaciones laborales</h4>
+                    <p>
+                        Ofertas de trabajo personalizadas y adaptadas a tus habilidades y preferencias
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="offer__card">
+            <img src="assets/offer-2.jpg" alt="offer" />
+            <div class="offer__details">
+                <span>02</span>
+                <div>
+                    <h4>Crea tu propio portfolio</h4>
+                    <p>Muestre su experiencia con un diseño de portafolio profesional</p>
+                </div>
+            </div>
+        </div>
+        <div class="offer__card">
+            <img src="assets/offer-3.jpg" alt="offer" />
+            <div class="offer__details">
+                <span>03</span>
+                <div>
+                    <h4>Consultoria laboral</h4>
+                    <p>Reciba asesoramiento de expertos para navegar en su trayectoria profesional.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>  

@@ -60,9 +60,9 @@ public class PuestosTrabajoController(IPuestosTrabajoModel _PuestosTrabajoModel)
     }
 
     [HttpGet]
-    public IActionResult ActualizarPuestosTrabajo(long idPuesto)
+    public IActionResult ActualizarPuestosTrabajo(long id)
     {
-        var respuestaModelo = _PuestosTrabajoModel.ActualizarUnPuestosTrabajo(idPuesto);
+        var respuestaModelo = _PuestosTrabajoModel.ActualizarUnPuestosTrabajo(id);
         return View(respuestaModelo?.Dato);
     }
 

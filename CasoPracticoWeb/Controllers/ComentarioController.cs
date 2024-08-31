@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CasoPracticoWeb.Entities;
-using CasoPracticoWeb.Models;
 using CasoPracticoWeb.Services;
-using CasoPracticoWeb.Entities;
 
-namespace CasoPracticoWeb.Controllers
-{
+namespace CasoPracticoWeb.Controllers {
     public class ComentarioController(IComentarioModel _ComentarioModel) : Controller
     {
 
@@ -27,7 +24,7 @@ namespace CasoPracticoWeb.Controllers
             else
             {
                 ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-                return View(new List<EmpresasEnt>());
+                return View(new List<ComentarioEnt>());
             }
         }
 
@@ -41,7 +38,7 @@ namespace CasoPracticoWeb.Controllers
             else
             {
                 ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-                return View(new List<EmpresasEnt>());
+                return View(new List<ComentarioEnt>());
             }
         }
 

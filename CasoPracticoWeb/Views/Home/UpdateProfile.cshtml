@@ -1,45 +1,43 @@
 ﻿@model InfoBretesWeb.Entities.UserEnt
 
 @{
-    ViewData["Title"] = "UpdateProfile";
     Layout = "~/Views/Shared/_LayoutProfile.cshtml";
 }
-
-<div class="form-box">
-    <div class="title">Update Profile</div>
+<div class="container__form" style="height: 50vh;">
     <form asp-action="UpdateProfile">
-        <div class="user-details">
+        <h2>Actualizar informacion</h2>
+        <div class="content">
             <div class="input-box" hidden>
-                <span class="details">IdUsuario</span>
-                <input asp-for="IdUsuario" required />
+                <label asp-for="IdUsuario">Id Usuario</label>
+                <input type="text" asp-for="IdUsuario" />
             </div>
             <div class="input-box">
-                <span class="details">Name</span>
-                <input asp-for="Nombre" placeholder="Enter your name" required />
+                <label asp-for="Nombre">Nombre completo</label>
+                <input type="text" placeholder="Ingresa tu nombre completo" asp-for="Nombre" />
             </div>
             <div class="input-box">
-                <span class="details">Email</span>
-                <input asp-for="Email" placeholder="Enter your email" required />
+                <label asp-for="Email">Correo Electronico</label>
+                <input type="text" placeholder="Ingresa tu correo" asp-for="Email" />
             </div>
             <div class="input-box" hidden>
-                <span class="details">Password</span>
-                <input asp-for="Password" required />
+                <label asp-for="Password">Contraseña</label>
+                <input type="text" placeholder="Ingresa tu contraseña" asp-for="Password" />
             </div>
             <div class="input-box" hidden>
-                <span class="details">FechaRegistro</span>
-                <input asp-for="FechaRegistro" required />
+                <label asp-for="FechaRegistro">Fecha Registro</label>
+                <input type="text" asp-for="FechaRegistro" />
             </div>
             <div class="input-box">
-                <span class="details">Direccion</span>
-                <input asp-for="Direccion" placeholder="Enter your address" required />
+                <label asp-for="Direccion">Direccion</label>
+                <input type="text" asp-for="Direccion" />
             </div>
             <div class="input-box" hidden>
-                <span class="details">IdTipo</span>
-                <input asp-for="IdTipo" required />
+                <label asp-for="IdTipo">Id Tipo</label>
+                <input type="text" asp-for="IdTipo" />
             </div>
         </div>
-        <div class="form-group">
-            <input type="submit" value="Update information" class="btn btn-primary" />
+        <div class="button-container">
+            <button type="submit">Actualizar</button>
         </div>
     </form>
 </div>

@@ -1,39 +1,22 @@
 ﻿@model InfoBretesWeb.Entities.EmpleadosEnt
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>CreaEmpleado</title>
-</head>
-<body>
-
-<h4>EmpleadosEnt</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreaEmpleado">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="linkCurriculum" class="control-label"></label>
-                <input asp-for="linkCurriculum" class="form-control" />
-                <span asp-validation-for="linkCurriculum" class="text-danger"></span>
+<div class="container__form" style="height: 55vh;">
+    <form asp-action="CreaEmpleado">
+        <h2>Registrar empleado</h2>
+        <div class="content">
+            <div class="input-box">
+                <label>Link del curriculum</label>
+                <input type="text" placeholder="Ingresa el link" asp-for="linkCurriculum" />
             </div>
-            <div class="form-group">
-                <label asp-for="telefono" class="control-label"></label>
-                <input asp-for="telefono" class="form-control" />
-                <span asp-validation-for="telefono" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+            <div class="input-box">
+                <label>Telefono</label>
+                <input type="text" placeholder="Ingresa el telefono" asp-for="telefono" />
+            </div>>
+        </div>
+        <div class="button-container">
+            <button type="submit">Registrar</button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

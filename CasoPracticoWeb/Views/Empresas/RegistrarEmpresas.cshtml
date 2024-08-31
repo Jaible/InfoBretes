@@ -3,69 +3,44 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<!-- Modal para Registrar Empresas -->
-<div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="modalRegistrarEmpresasLabel">Registrar Empresas</h5>
+<div class="container__form" style="height: 55vh;">
+    <form asp-action="RegistrarEmpresas">
+        <h2>Registrar empresa</h2>
+        <div class="content">
+            <div class="input-box">
+                <label>Nombre de la empresa</label>
+                <input type="text" placeholder="Ingresa el nombre de la empresa" asp-for="nombreEmpresa" />
+            </div>
+            <div class="input-box">
+                <label>Id del usuario</label>
+                <input type="text" placeholder="Ingresa el id del usuario" asp-for="idUsuario" />
+            </div>
+            <div class="input-box">
+                <label>Direccion</label>
+                <input type="text" placeholder="Ingresa la direccion de la empresa" asp-for="direccion" />
+            </div>
+            <div class="input-box">
+                <label>Descripcion</label>
+                <input type="text" placeholder="Ingresa la descripcion de la empresa" asp-for="descripcion" />
+            </div>
+            <div class="input-box">
+                <label>URL del sitio web</label>
+                <input type="text" placeholder="Ingresa el url de la pagina" asp-for="sitioWeb" />
+            </div>
+            <div class="input-box">
+                <label>Telefono</label>
+                <input type="text" placeholder="Ingresa el telefono" asp-for="telefono" />
+            </div>
+            <div class="input-box">
+                <label>Correo</label>
+                 <input type="text" placeholder="Ingresa el correo" asp-for="correo" />
+            </div>
         </div>
-        <div class="modal-body">
-            <form asp-action="RegistrarEmpresas">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-
-                <div class="form-group">
-                    <label asp-for="nombreEmpresa" class="control-label"></label>
-                    <input asp-for="nombreEmpresa" class="form-control" />
-                    <span asp-validation-for="nombreEmpresa" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="idUsuario" class="control-label"></label>
-                    <input asp-for="idUsuario" class="form-control" />
-                    <span asp-validation-for="idUsuario" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="direccion" class="control-label"></label>
-                    <input asp-for="direccion" class="form-control" />
-                    <span asp-validation-for="direccion" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="descripcion" class="control-label"></label>
-                    <input asp-for="descripcion" class="form-control" />
-                    <span asp-validation-for="descripcion" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="sitioWeb" class="control-label"></label>
-                    <input asp-for="sitioWeb" class="form-control" value="0" />
-                    <span asp-validation-for="sitioWeb" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="telefono" class="control-label"></label>
-                    <input asp-for="telefono" class="form-control" value="0" />
-                    <span asp-validation-for="telefono" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="correo" class="control-label"></label>
-                    <input asp-for="correo" class="form-control" value="0" />
-                    <span asp-validation-for="correo" class="text-danger"></span>
-                </div>
-
-                <div class="form-group text-right">
-                    <a asp-action="ConsultarEmpresas" class="btn btn-secondary">Cancelar</a>
-                    <input type="submit" value="Registrar" class="btn btn-primary" />
-                </div>
-            </form>
+        <div class="button-container">
+            <button type="submit">Registrar</button>
         </div>
-    </div>
+    </form>
 </div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

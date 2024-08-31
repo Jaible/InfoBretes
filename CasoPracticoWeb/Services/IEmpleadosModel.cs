@@ -1,5 +1,4 @@
-﻿using CasoPracticoWeb.Entities;
-using InfoBretesWeb.Entities;
+﻿using InfoBretesWeb.Entities;
 using static InfoBretesWeb.Entities.EmpleadosEnt;
 
 namespace InfoBretesWeb.Services

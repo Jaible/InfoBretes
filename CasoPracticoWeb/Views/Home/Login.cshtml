@@ -1,31 +1,22 @@
 ﻿@model InfoBretesWeb.Entities.Login
 
-@{
-    ViewData["Title"] = "Login";
-}
-
-<h1>Login</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+<div class="container__form" style="height: 35vh;">
+    <form asp-action="Login">
+        <h2>Login</h2>
+        <div class="content">
+            <div class="input-box">
+                <label>Correo Electronico</label>
+                <input type="text" placeholder="Ingresa tu correo" asp-for="Email"/>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+            <div class="input-box">
+                <label>Contraseña</label>
+                <input type="text" placeholder="Ingresa tu contraseña" asp-for="Password" />
             </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="button-container">
+            <button type="submit" >Login</button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

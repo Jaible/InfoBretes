@@ -43,7 +43,7 @@ namespace CasoPracticoWeb.Models
 
         public PuestosTrabajoRespuesta? ActualizarUnPuestosTrabajo(long idPuesto)
         {
-            string url = _configuration.GetSection("settings:UrlApi").Value + "api/Inventario/ActualizarUnPuestosTrabajo?idPuesto=" + idPuesto;
+            string url = _configuration.GetSection("settings:UrlApi").Value + "api/PuestosTrabajo/ActualizarUnPuestosTrabajo?idPuesto=" + idPuesto;
             var resp = _http.GetAsync(url).Result;
 
             if (resp.IsSuccessStatusCode)
