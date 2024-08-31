@@ -49,7 +49,7 @@ namespace CasoPracticoAPI.Controllers
         [HttpPost("register")]
         public IActionResult Register(UserEnt ent)
         {
-            Respuesta resp = new Respuesta();
+            UserRespuesta resp = new UserRespuesta();
 
             ent.FechaRegistro = DateTime.Now;
             ent.IdTipo = 1;
@@ -61,17 +61,15 @@ namespace CasoPracticoAPI.Controllers
 
             if (result > 0)
             {
-                resp.Codigo = 1;
+                resp.Codigo = "1";
                 resp.Mensaje = "OK";
-                resp.Contenido = true;
 
                 return Ok(resp);
             }
             else
             {
-                resp.Codigo = 0;
+                resp.Codigo = "0";
                 resp.Mensaje = "La informacion del usuario ya esta registrada.";
-                resp.Contenido = false;
 
                 return Ok(resp);
             }

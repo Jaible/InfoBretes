@@ -59,6 +59,9 @@ public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IU
         UserEnt user = new UserEnt { Email = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).SingleOrDefault() };
         var respuesta = iUserModel.Perfil(user);
         var empleado = iEmpleadosModel.ConsultarEmpleado((int)respuesta?.Dato?.IdUsuario);
+        if(empleado?.Dato?.idEmpleado == null) {
+            return RedirectToAction("CreaEmpleado", "Empleados");
+        }
         var respuestaModelo = _PostulacionesModel.ConsultarPostulacionPorEmpleado((int)empleado?.Dato?.idEmpleado);
 
         if (respuestaModelo?.Codigo == "1")
@@ -75,10 +78,10 @@ public class PostulacionesController(IPostulacionesModel _PostulacionesModel, IU
         var respuestaModelo = _PostulacionesModel.EliminarPostulacion(id);
 
         if (respuestaModelo?.Codigo == "1")
-            return RedirectToAction("ConsultarPostulacionPorEmpleado", "Postulacion");
+            return RedirectToAction("ConsultarPostulacionPorEmpleado", "Postulaciones");
         else {
             ViewBag.MsjPantalla = respuestaModelo?.Mensaje;
-            return RedirectToAction("ConsultarPostulacionPorEmpleado", "Postulacion");
+            return RedirectToAction("ConsultarPostulacionPorEmpleado", "Postulaciones");
         }
     }
 }

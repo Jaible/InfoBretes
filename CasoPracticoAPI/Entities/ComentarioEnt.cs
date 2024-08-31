@@ -6,6 +6,7 @@
         public int? idUsuario { get; set; }
         public int? idEmpresa { get; set; }
         public string? comentario { get; set; }
+        public int? rating { get; set; }
 
         public class ComentarioRespuesta
         {

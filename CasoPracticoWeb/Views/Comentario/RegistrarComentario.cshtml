@@ -8,15 +8,20 @@
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <p class="card-text h6">Ingrese una reseña sobre esta empresa</p>
-            <textarea name="text" cols="32" rows="10" placeholder="Ingresa tu opinión en esta área:"></textarea>
-            <div class="rating">
-                <i class="bi bi-star-fill star"></i>
-                <i class="bi bi-star-fill star"></i>
-                <i class="bi bi-star-fill star"></i>
-                <i class="bi bi-star-fill star"></i>
-                <i class="bi bi-star-fill star"></i>
-            </div>
-            <button class="btn btn-primary" type="submit">Enviar</button>
+            <form asp-action="RegistrarComentario" asp-controller="Comentario" method="post">
+                <input asp-for="idEmpresa" hidden/>
+                <input asp-for="idUsuario" hidden/> 
+                <textarea asp-for="comentario" cols="32" rows="10" placeholder="Ingresa tu opinión en esta área:"></textarea>
+                <input asp-for="rating" value="0" id="rating" hidden/>
+                <div class="rating">
+                    <i class="bi bi-star-fill star" data-num="1"></i>
+                    <i class="bi bi-star-fill star" data-num="2"></i>
+                    <i class="bi bi-star-fill star" data-num="3"></i>
+                    <i class="bi bi-star-fill star" data-num="4"></i>
+                    <i class="bi bi-star-fill star" data-num="5"></i>
+                </div>
+                <button class="btn btn-primary" type="submit">Enviar</button>
+            </form>
         </div>
     </div>
 </div>

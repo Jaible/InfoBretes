@@ -122,9 +122,12 @@
     @if (ViewBag.Nav == 1) {
         <script>
             const stars = document.querySelectorAll('.star');
+            const rating = document.getElementById("rating");
 
             stars.forEach(function (star, RegistrarComentario) {
                 star.addEventListener('click', function () {
+                    var num = star.getAttribute("data-num");
+                    rating.value = num;
                     for (let i = 0; i <= RegistrarComentario; i++) {
                         stars[i].classList.add('checked');
                     }

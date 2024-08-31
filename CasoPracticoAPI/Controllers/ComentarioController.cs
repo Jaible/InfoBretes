@@ -5,6 +5,9 @@ using CasoPracticoAPI.Entities;
 using System.Data;
 using System.Data.SqlClient;
 using static CasoPracticoAPI.Entities.ComentarioEnt;
+using static InfoBretesAPI.Entities.ComentarioDTO;
+using InfoBretesAPI.Entities;
+
 
 namespace CasoPracticoAPI.Controllers
 {
@@ -33,7 +36,8 @@ namespace CasoPracticoAPI.Controllers
                     {
                         Comentario.idUsuario,
                         Comentario.idEmpresa,
-                        Comentario.comentario
+                        Comentario.comentario,
+                        Comentario.rating       
                     };
 
                     var result = db.Execute("RegistrarComentario", parametros, commandType: CommandType.StoredProcedure);
@@ -60,15 +64,15 @@ namespace CasoPracticoAPI.Controllers
         [AllowAnonymous]
         [Route("ConsultarUnComentario")]
         [HttpGet]
-        public IActionResult ConsultarUnComentario(int IdEmpresa)
+        public IActionResult ConsultarUnComentario(int idEmpresa)
         {
-            ComentarioRespuesta miConsultarComentario = new ComentarioRespuesta();
+            ComentarioDTORespuesta miConsultarComentario = new ComentarioDTORespuesta();
             try
             {
                 using (var db = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
-                    var result = db.Query<ComentarioEnt>("ObtenerComentarioPorId",
-                        new { IdEmpresa },
+                    var result = db.Query<ComentarioDTO>("ObtenerComentarioPorId",
+                        new { idEmpresa },
                         commandType: CommandType.StoredProcedure).ToList();
 
                     if (result == null)
